@@ -287,7 +287,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.5 (Latest)
+### v0.1.6 (Latest)
+- **Complete Frontend Architecture Overhaul**: Completely reorganized landing page into modular, maintainable components
+- **Modern Navigation System**: Implemented sticky navigation with glassmorphism design, backdrop blur, and automatic dark mode detection
+- **Responsive Hero Layout**: Combined hero section and scan form into elegant desktop side-by-side layout with mobile-first responsive design
+- **Component Organization**: Split landing page into dedicated components (HeroWithScanForm, FeaturesSection, CTASection, Footer) for better maintainability
+- **Dark Mode Implementation**: Added automatic system preference detection with seamless light/dark mode switching across all components
+- **Enhanced User Experience**: Improved spacing, visual hierarchy, and interactive elements with smooth animations and transitions
+- **Docker Build Optimization**: Fixed Rust version compatibility issues and OpenSSL static linking for musl targets
+- **Production Configuration**: Updated Vite config with proper host allowlist and TypeScript error resolution
+- **API Client Improvements**: Enhanced production/development URL handling with automatic environment detection
+- **Build System Fixes**: Resolved TypeScript compilation errors and improved development workflow
+
+### v0.1.5
 - **Domain Updates**: Updated all URLs to keyguard.meetneura.ai domain
 - **Date Corrections**: Fixed all dates to current date (2025-09-07)
 - **Security.txt Updates**: Extended expiration to 2026-09-07

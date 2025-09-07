@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import Navigation from "@/components/Navigation";
+import { useDarkMode } from "@/hooks/use-dark-mode";
 import { 
   Shield, 
   ArrowLeft, 
@@ -30,6 +32,9 @@ const ScanResultsPage = () => {
   const [result, setResult] = useState<ScanResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Initialize dark mode detection
+  useDarkMode();
 
   useEffect(() => {
     if (!scanId) {
@@ -99,8 +104,10 @@ const ScanResultsPage = () => {
       (result.totalChecks > 0 ? (result.completedChecks / result.totalChecks * 100) : 50) : 0;
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-        <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
+        <Navigation />
+        <div className="pt-20">
+          <div className="container mx-auto px-4 py-8">
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -140,6 +147,7 @@ const ScanResultsPage = () => {
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
     );
@@ -147,7 +155,9 @@ const ScanResultsPage = () => {
 
   if (error || !result) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center">
+        <Navigation />
+        <div className="pt-20 flex items-center justify-center w-full h-full">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-6 text-center">
             <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
@@ -159,12 +169,15 @@ const ScanResultsPage = () => {
             </Button>
           </CardContent>
         </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
+      <Navigation />
+      <div className="pt-20">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -391,6 +404,7 @@ const ScanResultsPage = () => {
             )}
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );
