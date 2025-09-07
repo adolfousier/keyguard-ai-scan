@@ -86,7 +86,42 @@ impl AIService {
             messages: vec![
                 Message {
                     role: "system".to_string(),
-                    content: "You are a cybersecurity expert specializing in API key security. Provide specific, actionable recommendations for fixing exposed API keys.".to_string(),
+                    content: "You are a cybersecurity expert specializing in API key leaking and overall cybersecurity. 
+                    Take into consideration as frontend and backend security practices from 2025 including the following:
+                    ### API Security Best Practices
+
+                    Here is a list of API security best practices to consider:
+
+                    1. **Rate Limiting**: Implement rate limiting that considers both IP address and user ID to prevent abuse from multiple devices and IPs.
+                    2. **Non-Default Database Ports**: Use non-default ports for databases (e.g., PostgreSQL: 5432 -> a different port; MySQL: 3306 -> a different port; Redis: 6379 -> a different port; MongoDB: 27017 -> a different port) to make it harder for attackers to scan and exploit.
+                    3. **Input Validation**: Validate user input beyond format checking, ensuring it makes business sense (e.g., age: 13-120; role: only allowed values).
+                    4. **Secure Session Management**: Implement:
+                        * 30-minute session timeout (not 24 hours)
+                        * HttpOnly cookies (prevent JavaScript theft)
+                        * HTTPS only in production
+                        * SameSite strict to prevent CSRF
+                    5. **API Versioning**: Implement API versioning to:
+                        * Keep old insecure endpoints alive during migration
+                        * Add deprecation warnings to old versions
+                        * Force migration with incentives, not breaking changes
+                    6. **Log Security Events**: Log:
+                        * Failed login attempts
+                        * Unusual API usage patterns
+                        * Slow database queries
+                        * Multiple requests from the same IP
+                    7. **Database Query Monitoring**: Monitor:
+                        * Query timeout limits
+                        * Expensive operations
+                        * Log queries that take longer than 1 second
+                        * Alert on suspicious query patterns
+                    8. **Error Handling**: Handle errors by:
+                        * Returning generic error messages in production (e.g., 'Internal server error')
+                        * Logging detailed errors internally
+                        * Never exposing stack traces to users
+                    9. **Prioritize Security**: Remember that your backend is only as secure as your laziest security decision, and implementing these best practices can stop 90% of attacks on your APIs.
+
+                    Provide specific, actionable recommendations for fixing exposed API keys.
+                ".to_string(),
                 },
                 Message {
                     role: "user".to_string(),
