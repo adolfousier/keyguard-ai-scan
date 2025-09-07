@@ -14,7 +14,8 @@ import {
   Facebook, 
   Copy, 
   Check,
-  Link
+  Link,
+  Instagram
 } from "lucide-react";
 import { ScanResult } from "@/types/scan";
 import { analytics } from "@/lib/analytics";
@@ -59,7 +60,7 @@ export const ShareButton = ({ result, size = "sm", variant = "outline" }: ShareB
   };
 
   const shareToTwitter = () => {
-    const text = encodeURIComponent(`${shareTitle}\n\n${shareDescription}\n\nScan powered by KeyGuard AI`);
+    const text = encodeURIComponent(`${shareTitle}\n\n${shareDescription}\n\nScan powered by @meetneuraai KeyGuard AI open-source free tool`);
     const url = encodeURIComponent(shareUrl);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
     analytics.trackResultsShared();
@@ -67,16 +68,30 @@ export const ShareButton = ({ result, size = "sm", variant = "outline" }: ShareB
 
   const shareToLinkedIn = () => {
     const url = encodeURIComponent(shareUrl);
-    const title = encodeURIComponent(shareTitle);
-    const summary = encodeURIComponent(shareDescription);
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`, '_blank');
+    // LinkedIn only accepts URL, pulls title/description from meta tags
+    // User can edit the post text manually after opening
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
     analytics.trackResultsShared();
   };
 
   const shareToFacebook = () => {
     const url = encodeURIComponent(shareUrl);
+    // Facebook pulls content from Open Graph meta tags
+    // User can add their own text in the post composer
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     analytics.trackResultsShared();
+  };
+
+  const shareToInstagram = () => {
+    // Instagram doesn't support direct URL sharing from web
+    // Copy URL and open Instagram web for manual sharing
+    navigator.clipboard.writeText(`${shareTitle}\n\n${shareDescription}\n\nCheck it out: ${shareUrl}\n\n#cybersecurity #apisecurity #keyguard @meetneuraai`);
+    window.open('https://www.instagram.com/', '_blank');
+    analytics.trackResultsShared();
+    toast({
+      title: "Text Copied!",
+      description: "Caption copied to clipboard. Paste it in your Instagram post!",
+    });
   };
 
   const nativeShare = async () => {
@@ -176,6 +191,18 @@ export const ShareButton = ({ result, size = "sm", variant = "outline" }: ShareB
               <span className="text-sm font-medium">Facebook</span>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Share on Facebook
+              </p>
+            </div>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={shareToInstagram} className="cursor-pointer">
+          <div className="flex items-center space-x-3 w-full">
+            <Instagram className="h-4 w-4 text-pink-500" />
+            <div className="flex-1">
+              <span className="text-sm font-medium">Instagram</span>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Copy caption & open Instagram
               </p>
             </div>
           </div>
