@@ -287,7 +287,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.2 (Latest)
+### v0.1.3 (Latest)
+- **Critical Bug Fixes**: Fixed non-functional scan button and navigation issues
+- **UI/UX Improvements**: Added real-time scanning progress with visual progress bar
+- **Results Display**: Fixed scan results page to properly show AI recommendations and findings
+- **Navigation Flow**: Implemented proper scan-to-results page flow with loading states
+- **Polling System**: Added automatic result polling for real-time scan status updates
+- **Error Handling**: Improved error handling and user feedback during scan failures
+- **Performance**: Optimized frontend-backend communication and state management
+
+### v0.1.2
 - **Enhanced AI Integration**: Improved NEURA_ROUTER integration with better error handling
 - **Backend Improvements**: Enhanced scanner module with better pattern matching
 - **Database Optimizations**: Improved LibSQL integration and query performance

@@ -37,19 +37,24 @@ const Index = () => {
     analytics.trackPageView('landing');
   }, []);
 
-  const handleScan = () => {
+  const handleScan = async () => {
+    console.log('BUTTON CLICKED - handleScan called');
+    
     if (!url.trim()) {
-      toast({
-        title: "URL Required",
-        description: "Please enter a website URL to scan.",
-        variant: "destructive",
-      });
+      console.log('No URL provided');
       return;
     }
 
-    if (isScanning) return;
+    if (isScanning) {
+      console.log('Already scanning, ignoring click');
+      return;
+    }
     
+    console.log('Starting scan for:', url);
     setIsScanning(true);
+    
+    // Force immediate navigation for testing
+    console.log('Navigating to results page');
     navigate('/scan-results?id=test-123');
   };
 
@@ -90,7 +95,7 @@ const Index = () => {
               <Star className="h-3 w-3 mr-1" />
               Free & Open Source
             </Badge>
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" className="text-gray-900 border-gray-300 hover:bg-purple-600 hover:text-white hover:border-purple-600" asChild>
               <a href="https://github.com/keyguard-ai/scan" target="_blank" rel="noopener noreferrer">
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
@@ -164,7 +169,23 @@ const Index = () => {
                 </div>
                 
                 <Button 
-                  onClick={handleScan}
+                  onClick={async () => {
+                    if (!url.trim() || isScanning) return;
+                    
+                    setIsScanning(true);
+                    try {
+                      const scanResult = await scannerClient.startScan({ url });
+                      navigate(`/scan-results?id=${scanResult.id}`);
+                    } catch (error) {
+                      console.error('Scan error:', error);
+                      setIsScanning(false);
+                      toast({
+                        title: "Scan Failed",
+                        description: "Unable to start the scan. Please try again.",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
                   disabled={isScanning || !url.trim()}
                   className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -284,7 +305,7 @@ const Index = () => {
                 <Shield className="h-5 w-5 mr-2" />
                 Start Free Scan
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-purple-600" asChild>
+              <Button size="lg" variant="outline" className="bg-white text-gray-900 border-white hover:bg-purple-600 hover:text-white hover:border-purple-600" asChild>
                 <a href="https://github.com/keyguard-ai/scan" target="_blank" rel="noopener noreferrer">
                   <Github className="h-5 w-5 mr-2" />
                   View on GitHub

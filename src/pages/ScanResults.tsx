@@ -37,7 +37,7 @@ const ScanResultsPage = () => {
       return;
     }
 
-    const fetchResult = async () => {
+    const pollResults = async () => {
       try {
         const scanResult = await scannerClient.getScanResult(scanId);
         
@@ -67,15 +67,21 @@ const ScanResultsPage = () => {
         };
 
         setResult(transformedResult);
+        
+        // If still scanning, continue polling
+        if (scanResult.status === 'scanning') {
+          setTimeout(pollResults, 2000);
+        } else {
+          setLoading(false);
+        }
       } catch (err) {
         setError('Failed to load scan results');
         console.error('Error fetching scan result:', err);
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchResult();
+    pollResults();
   }, [scanId, navigate]);
 
   const copyAIResponse = () => {
@@ -88,12 +94,52 @@ const ScanResultsPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || (result && result.status === 'scanning')) {
+    const progress = result ? 
+      (result.totalChecks > 0 ? (result.completedChecks / result.totalChecks * 100) : 50) : 0;
+    
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading scan results...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+        <div className="container mx-auto px-4 py-8">
+          <Card className="max-w-2xl mx-auto">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Shield className="h-6 w-6 text-blue-600 animate-pulse" />
+                <span>Scanning in Progress</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center space-y-6">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+                
+                {result && (
+                  <div className="space-y-4">
+                    <div className="text-lg font-medium text-gray-900">
+                      Analyzing: {result.url}
+                    </div>
+                    
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                    
+                    <div className="text-sm text-gray-600">
+                      {result.completedChecks} of {result.totalChecks || '?'} checks completed ({Math.round(progress)}%)
+                    </div>
+                  </div>
+                )}
+                
+                {!result && (
+                  <div className="space-y-2">
+                    <div className="text-lg font-medium text-gray-900">Initializing scan...</div>
+                    <div className="text-sm text-gray-600">Please wait while we analyze your website</div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
