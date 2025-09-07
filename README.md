@@ -287,7 +287,25 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.3 (Latest)
+### v0.1.5 (Latest)
+- **Domain Updates**: Updated all URLs to keyguard.meetneura.ai domain
+- **Date Corrections**: Fixed all dates to current date (2025-09-07)
+- **Security.txt Updates**: Extended expiration to 2026-09-07
+- **Contact Information**: Updated to security@meetneura.ai
+- **Sitemap Refresh**: Updated lastmod dates to current
+- **Humans.txt Updates**: Refreshed team information and dates
+
+### v0.1.4
+- **SEO Optimization**: Added comprehensive OpenGraph meta tags and Twitter cards
+- **Search Engine Enhancement**: Implemented structured data (JSON-LD) for better search visibility
+- **Sitemap Integration**: Added XML sitemap for improved search engine crawling
+- **PWA Support**: Added web app manifest for progressive web app capabilities
+- **Social Media Ready**: Optimized og.png image integration for social sharing
+- **Meta Tags Enhancement**: Added proper keywords, canonical URLs, and theme colors
+- **Robots.txt Optimization**: Updated with sitemap reference and proper crawling directives
+- **Mobile Optimization**: Enhanced viewport and mobile-first meta configurations
+
+### v0.1.3
 - **Critical Bug Fixes**: Fixed non-functional scan button and navigation issues
 - **UI/UX Improvements**: Added real-time scanning progress with visual progress bar
 - **Results Display**: Fixed scan results page to properly show AI recommendations and findings

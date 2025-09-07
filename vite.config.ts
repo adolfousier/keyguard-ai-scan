@@ -14,4 +14,21 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          // Keep specific files in root
+          if (assetInfo.name === 'sitemap.xml' || 
+              assetInfo.name === 'robots.txt' || 
+              assetInfo.name === 'manifest.json' ||
+              assetInfo.name === 'humans.txt' ||
+              assetInfo.name === 'security.txt') {
+            return '[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+      },
+    },
+  },
 });

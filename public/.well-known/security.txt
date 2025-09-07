@@ -1,0 +1,14 @@
+Contact: security@meetneura.ai
+Expires: 2026-09-07T23:59:59.000Z
+Encryption: https://keyguard.meetneura.ai/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://keyguard.meetneura.ai/.well-known/security.txt
+Policy: https://keyguard.meetneura.ai/security-policy
+Acknowledgments: https://keyguard.meetneura.ai/security-acknowledgments
+
+# KeyGuard AI Scan Security Contact
+# 
+# We take security seriously. If you discover a security vulnerability
+# in KeyGuard AI Scan, please report it responsibly.
+#
+# Please do NOT report security vulnerabilities through public GitHub issues.

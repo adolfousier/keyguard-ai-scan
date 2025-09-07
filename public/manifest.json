@@ -1,0 +1,25 @@
+{
+  "name": "KeyGuard AI Scan",
+  "short_name": "KeyGuard",
+  "description": "Open-source security tool that scans websites for exposed API keys with AI-powered recommendations",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/og.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["security", "developer-tools", "utilities"],
+  "lang": "en-US"
+}

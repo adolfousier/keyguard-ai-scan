@@ -85,7 +85,7 @@ const Index = () => {
               <Shield className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">KeyGuard AI Scan</h1>
+              <h2 className="text-2xl font-bold text-gray-900">KeyGuard AI Scan</h2>
               <p className="text-sm text-gray-600">Open-source API key security scanner</p>
             </div>
           </div>
@@ -96,7 +96,7 @@ const Index = () => {
               Free & Open Source
             </Badge>
             <Button variant="outline" size="sm" className="text-gray-900 border-gray-300 hover:bg-purple-600 hover:text-white hover:border-purple-600" asChild>
-              <a href="https://github.com/keyguard-ai/scan" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/adolfousier/keyguard-ai-scan" target="_blank" rel="noopener noreferrer">
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
               </a>
@@ -107,16 +107,16 @@ const Index = () => {
 
       <div className="container mx-auto px-4 pb-12">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <section className="text-center mb-12" aria-labelledby="hero-heading">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
               Detect & Fix
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> API Key Leaks </span>
               Instantly
-            </h2>
+            </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Scan any website for exposed API keys with advanced AI-powered detection. 
-              Get intelligent recommendations to secure your applications in seconds.
+              Professional open-source security scanner that detects exposed API keys across websites. 
+              Advanced AI-powered analysis identifies vulnerabilities from AWS, Google Cloud, GitHub, Stripe, and 100+ other services.
             </p>
             
             <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -134,7 +134,7 @@ const Index = () => {
               </Badge>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Scan Interface */}
         <Card className="max-w-2xl mx-auto mb-12 shadow-lg border-0 bg-white/80 backdrop-blur">
@@ -207,17 +207,18 @@ const Index = () => {
         </Card>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" aria-labelledby="features-heading">
+          <h2 id="features-heading" className="sr-only">KeyGuard AI Scan Features</h2>
           <Card className="border-0 bg-white/60 backdrop-blur">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Globe className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="font-semibold text-gray-900">Comprehensive Detection</h3>
+                <h3 className="font-semibold text-gray-900">Comprehensive API Key Detection</h3>
               </div>
               <p className="text-gray-600">
-                Scans HTML, JavaScript, CSS, and network requests for 100+ different API key patterns from major providers.
+                Advanced pattern matching scans HTML, JavaScript, CSS, and network requests for 100+ API key types from AWS, Google Cloud, GitHub, Stripe, OpenAI, and other major cloud providers.
               </p>
             </CardContent>
           </Card>
@@ -228,10 +229,10 @@ const Index = () => {
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <Brain className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="font-semibold text-gray-900">AI Recommendations</h3>
+                <h3 className="font-semibold text-gray-900">AI-Powered Security Recommendations</h3>
               </div>
               <p className="text-gray-600">
-                Get intelligent, context-aware security recommendations powered by advanced AI models.
+                Receive intelligent, context-aware security recommendations and remediation steps powered by advanced AI models for immediate vulnerability fixes.
               </p>
             </CardContent>
           </Card>
@@ -291,14 +292,14 @@ const Index = () => {
               </p>
             </CardContent>
           </Card>
-        </div>
+        </section>
 
         {/* Call to Action */}
         <Card className="max-w-4xl mx-auto border-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold mb-4">Ready to Secure Your Website?</h3>
+            <h2 className="text-2xl font-bold mb-4">Ready to Secure Your Website?</h2>
             <p className="text-lg mb-6 opacity-90">
-              Join thousands of developers using KeyGuard AI Scan to protect their applications from API key exposures.
+              Join thousands of developers and security teams using KeyGuard AI Scan to protect their web applications from dangerous API key exposures and security vulnerabilities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" onClick={() => setUrl("https://")}>
@@ -321,9 +322,9 @@ const Index = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-gray-600">
             <p className="mb-2">
-              Built with ❤️ by the security community • 
-              <a href="https://github.com/adolfousier/keyguard-ai-scan" className="text-blue-600 hover:underline ml-1">
-                Open Source
+              Built with ❤️ by the security team • 
+              <a href="https://meetneura.ai" className="text-blue-600 hover:underline ml-1">
+                Neura AI
               </a>
             </p>
             <p className="text-sm">

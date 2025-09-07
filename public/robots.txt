@@ -1,3 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /.env
+Disallow: /server/
+
+# Specific crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +17,5 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemap
+Sitemap: https://keyguard.meetneura.ai/sitemap.xml

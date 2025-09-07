@@ -1,0 +1,52 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    KeyGuard AI Security Team
+    Site: https://keyguard.meetneura.ai
+    Twitter: @meetneuraai
+    Location: Global
+
+# THANKS
+
+    Open Source Community
+    Neura AI Security Researchers
+    Beta Testers
+    Contributors
+
+# TECHNOLOGY COLOPHON
+
+    ## Frontend
+    React 18
+    TypeScript
+    Vite
+    Tailwind CSS
+    Shadcn/ui
+
+    ## Backend  
+    Rust
+    Actix Web
+    Reqwest
+    LibSQL
+    Docker
+
+    ## AI Integration
+    NEURA Router
+    OpenAI Compatible APIs
+
+    ## Security
+    JWT Authentication
+    bcrypt Password Hashing
+    HTTPS Encryption
+    Rate Limiting
+
+    ## Analytics
+    Langfuse
+
+# SITE
+
+    Last update: 2025/09/07
+    Standards: HTML5, CSS3, ES2022
+    Components: React, TypeScript
+    Software: Vim, Git
