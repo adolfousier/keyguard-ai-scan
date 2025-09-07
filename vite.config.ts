@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     host: "::",
     port: 11111,
+    allowedHosts: [
+      'keyguard.meetneura.ai',
+      'meetneura.ai',
+      'localhost'
+    ],
   },
   plugins: [react()],
   resolve: {
