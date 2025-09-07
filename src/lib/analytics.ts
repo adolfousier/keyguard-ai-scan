@@ -1,5 +1,5 @@
 
-import { Langfuse } from "langfuse";
+
 
 interface AnalyticsEvent {
   event: string;
@@ -9,34 +9,15 @@ interface AnalyticsEvent {
 }
 
 class AnalyticsService {
-  private langfuse: Langfuse | null = null;
   private sessionId: string;
   private userId: string;
 
   constructor() {
     this.sessionId = this.generateSessionId();
     this.userId = this.getUserId();
-    this.initializeLangfuse();
   }
 
-  private initializeLangfuse() {
-    try {
-      // In production, these would come from environment variables
-      const publicKey = 'demo-public-key';
-      const secretKey = 'demo-secret-key';
-      const baseUrl = 'https://cloud.langfuse.com';
 
-      this.langfuse = new Langfuse({
-        publicKey,
-        secretKey,
-        baseUrl
-      });
-      
-      console.log('Analytics service initialized');
-    } catch (error) {
-      console.warn('Failed to initialize analytics:', error);
-    }
-  }
 
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -56,19 +37,7 @@ class AnalyticsService {
       // Log to console for development
       console.log('Analytics Event:', { event, properties, userId: this.userId, sessionId: this.sessionId });
 
-      // Send to Langfuse if available
-      if (this.langfuse) {
-        this.langfuse.event({
-          name: event,
-          metadata: {
-            ...properties,
-            userId: this.userId,
-            sessionId: this.sessionId
-          },
-          input: properties,
-          startTime: new Date()
-        });
-      }
+
 
       // Store locally for offline analytics
       this.storeLocalEvent({ event, properties, userId: this.userId, sessionId: this.sessionId });

@@ -42,7 +42,6 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that scans websit
 - **Build Tool**: Vite for fast development and builds
 - **Styling**: Tailwind CSS + Shadcn/ui components
 - **State Management**: TanStack Query for server state
-- **Analytics**: Langfuse for user tracking and insights
 - **Icons**: Lucide React for consistent iconography
 
 ### Backend Stack
@@ -361,7 +360,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Shadcn/ui**: Beautiful, accessible React components
-- **Langfuse**: Analytics and user tracking platform
 - **NEURA_ROUTER**: AI-powered recommendation engine
 - **Rust Community**: Amazing ecosystem and libraries
 - **Security Researchers**: Vulnerability patterns and best practices
