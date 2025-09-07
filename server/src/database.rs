@@ -22,7 +22,9 @@ pub struct User {
 
 impl Database {
     pub async fn new() -> Result<Self> {
-        let db = libsql::Builder::new_local(":memory:").build().await?;
+        // Use persistent file storage instead of in-memory
+        let db_path = std::env::var("DATABASE_PATH").unwrap_or_else(|_| "keyguard.db".to_string());
+        let db = libsql::Builder::new_local(&db_path).build().await?;
         let conn = db.connect()?;
         
         let database = Self { conn };

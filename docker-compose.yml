@@ -26,6 +26,9 @@ services:
       - NEURA_ROUTER_API_URL=${NEURA_ROUTER_API_URL}
       - NEURA_ROUTER_API_MODEL=${NEURA_ROUTER_API_MODEL}
       - RUST_LOG=info
+      - DATABASE_PATH=/app/data/keyguard.db
+    volumes:
+      - keyguard-data:/app/data
     networks:
       - keyguard-network
 

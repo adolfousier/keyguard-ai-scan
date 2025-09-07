@@ -13,6 +13,8 @@ FROM alpine:latest
 RUN apk add --no-cache ca-certificates
 
 WORKDIR /app
+# Create data directory for persistent database storage
+RUN mkdir -p /app/data
 COPY --from=builder /app/target/release/keyguard-backend ./
 
 EXPOSE 11112

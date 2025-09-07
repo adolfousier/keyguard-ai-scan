@@ -286,7 +286,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.7 (Latest)
+### v0.1.8 (Latest)
+- **Persistent Database Storage**: Fixed shared scan result URLs not persisting after app restart by switching from in-memory to file-based database storage
+- **Docker Volume Integration**: Added persistent volume mounting for database files in Docker containers to ensure data survives container restarts
+- **Environment Configuration**: Added DATABASE_PATH environment variable for configurable database file location
+- **Production Deployment**: Enhanced Docker configuration with proper data persistence for production environments
+- **Database File Management**: Added database files to .gitignore to prevent committing persistent data
+- **Container Optimization**: Updated Dockerfile to create data directory structure for reliable database storage
+
+### v0.1.7
 - **Professional Share & Export System**: Implemented comprehensive modular sharing and export functionality
 - **Advanced Export Formats**: Added Markdown, JSON, and CSV export options with branded professional reports
 - **Smart Social Sharing**: Integrated Twitter/X, LinkedIn, Facebook sharing with branded previews and security status
