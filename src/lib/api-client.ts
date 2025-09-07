@@ -72,16 +72,47 @@ class APIClient {
       headers['Authorization'] = `Bearer ${this.token}`;
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+        timeout: 30000, // 30 second timeout
+      });
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.statusText}`);
+      if (!response.ok) {
+        let errorMessage = `API request failed: ${response.statusText}`;
+        
+        // Try to get more specific error from response body
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch {
+          // Ignore JSON parsing errors for error responses
+        }
+        
+        // Specific error types
+        if (response.status === 404) {
+          throw new Error('Service not found. Please check if the backend is running.');
+        } else if (response.status === 500) {
+          throw new Error('Server error occurred. Please try again later.');
+        } else if (response.status === 429) {
+          throw new Error('Too many requests. Please wait a moment before trying again.');
+        } else if (response.status >= 400 && response.status < 500) {
+          throw new Error(`Client error: ${errorMessage}`);
+        } else {
+          throw new Error(errorMessage);
+        }
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to connect to the scanning service. Please check your internet connection.');
+      }
+      throw error;
     }
-
-    return response.json();
   }
 
   async startScan(request: ScanRequest): Promise<ScanResult> {

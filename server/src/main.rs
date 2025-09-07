@@ -1,21 +1,19 @@
 
 use axum::{
-    extract::{Path, Query, State},
+    extract::{Path, State},
     http::{StatusCode, Method},
-    middleware,
     response::Json,
     routing::{get, post},
     Router,
 };
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use tower_http::cors::{Any, CorsLayer};
-use uuid::Uuid;
 
 mod database;
 mod scanner;
 mod auth;
 mod ai_service;
+mod utils;
 
 use database::Database;
 use scanner::{ScanRequest, ScanResult, ScanProgress};
@@ -54,11 +52,16 @@ impl<T> ApiResponse<T> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tracing_subscriber::init();
+    tracing_subscriber::fmt::init();
     dotenv::dotenv().ok();
 
+    println!("💾 Initializing database...");
     let database = Database::new().await?;
+    println!("✅ Database initialized successfully");
+    
+    println!("🔐 Initializing auth service...");
     let auth = AuthService::new();
+    println!("✅ Auth service initialized");
     
     let state = AppState {
         db: database,

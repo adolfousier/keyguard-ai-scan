@@ -75,7 +75,7 @@ pub async fn start_scan(db: &Database, request: ScanRequest) -> Result<ScanResul
     let scan_id = Uuid::new_v4().to_string();
     let start_time = Utc::now();
     
-    let mut result = ScanResult {
+    let result = ScanResult {
         id: scan_id.clone(),
         user_id: request.user_id.clone(),
         url: request.url.clone(),
@@ -83,7 +83,7 @@ pub async fn start_scan(db: &Database, request: ScanRequest) -> Result<ScanResul
         start_time,
         end_time: None,
         findings: Vec::new(),
-        total_checks: 100,
+        total_checks: 0,
         completed_checks: 0,
         ai_recommendations: None,
         summary: ScanSummary {
@@ -98,10 +98,12 @@ pub async fn start_scan(db: &Database, request: ScanRequest) -> Result<ScanResul
     // Save initial scan state
     db.save_scan_result(&result).await?;
 
-    // Start scanning process
+    // Start scanning process in background
+    let db_clone = db.clone();
+    let scan_id_clone = scan_id.clone();
+    let request_clone = request.clone();
     tokio::spawn(async move {
-        let db_clone = db.clone();
-        if let Err(e) = perform_scan(db_clone, scan_id, request).await {
+        if let Err(e) = perform_scan(db_clone, scan_id_clone, request_clone).await {
             eprintln!("Scan failed: {}", e);
         }
     });
@@ -110,73 +112,115 @@ pub async fn start_scan(db: &Database, request: ScanRequest) -> Result<ScanResul
 }
 
 async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Result<()> {
+    println!("🔍 Starting scan for: {}", request.url);
     let client = Client::new();
     let patterns = get_api_patterns();
     
     // Update progress
     update_progress(&db, &scan_id, "Fetching website content", 10).await?;
+    println!("📡 Fetching content from: {}", request.url);
     
     // Fetch main page
     let response = client.get(&request.url).send().await?;
+    println!("✅ Response received, status: {}", response.status());
     let html_content = response.text().await?;
+    println!("📝 HTML content length: {} bytes", html_content.len());
     
     update_progress(&db, &scan_id, "Analyzing HTML content", 30).await?;
     
-    // Parse HTML
-    let document = Html::parse_document(&html_content);
+    // Parse HTML and extract URLs synchronously
+    let (script_urls, inline_scripts, css_urls) = {
+        let document = Html::parse_document(&html_content);
+        
+        // Extract script URLs
+        let script_selector = Selector::parse("script[src]").unwrap();
+        let script_urls: Vec<String> = document.select(&script_selector)
+            .filter_map(|element| element.value().attr("src"))
+            .map(|src| resolve_url(&request.url, src))
+            .collect();
+        
+        // Extract inline scripts
+        let inline_script_selector = Selector::parse("script:not([src])").unwrap();
+        let inline_scripts: Vec<String> = document.select(&inline_script_selector)
+            .map(|element| element.inner_html())
+            .collect();
+        
+        // Extract CSS URLs
+        let css_selector = Selector::parse("link[rel='stylesheet']").unwrap();
+        let css_urls: Vec<String> = document.select(&css_selector)
+            .filter_map(|element| element.value().attr("href"))
+            .map(|href| resolve_url(&request.url, href))
+            .collect();
+        
+        (script_urls, inline_scripts, css_urls)
+    }; // document is dropped here
+    
     let mut findings = Vec::new();
+    let mut total_checks = 0;
     
     // Scan HTML content
-    findings.extend(scan_text_content(&html_content, "HTML", &patterns));
+    total_checks += 1;
+    let html_findings = scan_text_content(&html_content, "HTML", &patterns);
+    println!("🔍 HTML scan found {} potential issues", html_findings.len());
+    findings.extend(html_findings);
     
     update_progress(&db, &scan_id, "Scanning JavaScript files", 50).await?;
     
-    // Extract and scan JavaScript files
-    let script_selector = Selector::parse("script[src]").unwrap();
-    for element in document.select(&script_selector) {
-        if let Some(src) = element.value().attr("src") {
-            let script_url = resolve_url(&request.url, src);
-            if let Ok(script_response) = client.get(&script_url).send().await {
-                if let Ok(script_content) = script_response.text().await {
-                    findings.extend(scan_text_content(&script_content, &format!("JavaScript: {}", src), &patterns));
-                }
+    // Scan external JavaScript files
+    for script_url in &script_urls {
+        total_checks += 1;
+        if let Ok(script_response) = client.get(script_url).send().await {
+            if let Ok(script_content) = script_response.text().await {
+                let src = script_url.split('/').last().unwrap_or(script_url);
+                findings.extend(scan_text_content(&script_content, &format!("JavaScript: {}", src), &patterns));
             }
         }
     }
     
     // Scan inline JavaScript
-    let inline_script_selector = Selector::parse("script:not([src])").unwrap();
-    for element in document.select(&inline_script_selector) {
-        let script_content = element.inner_html();
-        findings.extend(scan_text_content(&script_content, "Inline JavaScript", &patterns));
+    for script_content in &inline_scripts {
+        total_checks += 1;
+        findings.extend(scan_text_content(script_content, "Inline JavaScript", &patterns));
     }
     
     update_progress(&db, &scan_id, "Scanning CSS files", 70).await?;
     
     // Scan CSS files
-    let css_selector = Selector::parse("link[rel='stylesheet']").unwrap();
-    for element in document.select(&css_selector) {
-        if let Some(href) = element.value().attr("href") {
-            let css_url = resolve_url(&request.url, href);
-            if let Ok(css_response) = client.get(&css_url).send().await {
-                if let Ok(css_content) = css_response.text().await {
-                    findings.extend(scan_text_content(&css_content, &format!("CSS: {}", href), &patterns));
-                }
+    for css_url in &css_urls {
+        total_checks += 1;
+        if let Ok(css_response) = client.get(css_url).send().await {
+            if let Ok(css_content) = css_response.text().await {
+                let href = css_url.split('/').last().unwrap_or(css_url);
+                findings.extend(scan_text_content(&css_content, &format!("CSS: {}", href), &patterns));
             }
         }
     }
     
     update_progress(&db, &scan_id, "Generating AI recommendations", 90).await?;
+    println!("🤖 Total findings before AI analysis: {}", findings.len());
     
-    // Generate AI recommendations
+    // Generate AI recommendations with actual content
     let ai_service = AIService::new();
-    let ai_recommendations = ai_service.generate_recommendations(&findings, &request.url).await?;
+    let content_summary = format!(
+        "Website: {}\n\nContent Analysis:\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\nSample content for analysis:\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\nSecurity findings: {} issues detected",
+        request.url,
+        html_content.len(),
+        script_urls.len(),
+        css_urls.len(),
+        inline_scripts.len(),
+        &html_content[..html_content.len().min(1000)],
+        if !inline_scripts.is_empty() { &inline_scripts[0][..inline_scripts[0].len().min(500)] } else { "No inline scripts" },
+        findings.len()
+    );
+    let ai_recommendations = ai_service.generate_recommendations(&findings, &request.url, Some(&content_summary)).await?;
+    println!("✨ AI recommendations generated successfully");
     
     // Calculate summary
     let summary = calculate_summary(&findings);
     
     // Update final result
     let end_time = Utc::now();
+    let url_clone = request.url.clone();
     let final_result = ScanResult {
         id: scan_id.clone(),
         user_id: request.user_id,
@@ -185,14 +229,28 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         start_time: db.get_scan_result(&scan_id).await?.unwrap().start_time,
         end_time: Some(end_time),
         findings,
-        total_checks: 100,
-        completed_checks: 100,
+        total_checks,
+        completed_checks: total_checks,
         ai_recommendations: Some(ai_recommendations),
         summary,
     };
     
-    db.save_scan_result(&final_result).await?;
-    update_progress(&db, &scan_id, "Scan completed", 100).await?;
+    match db.save_scan_result(&final_result).await {
+        Ok(_) => println!("✅ Scan result saved to database successfully"),
+        Err(e) => {
+            println!("❌ Failed to save scan result to database: {}", e);
+            return Err(e);
+        }
+    }
+    
+    match update_progress(&db, &scan_id, "Scan completed", 100).await {
+        Ok(_) => println!("✅ Progress updated successfully"),
+        Err(e) => println!("⚠️ Failed to update progress: {}", e),
+    }
+    
+    println!("✅ Scan completed successfully for: {}", url_clone);
+    println!("📊 Final summary: {} total findings", final_result.summary.total);
+    println!("🔍 AI recommendations length: {} chars", final_result.ai_recommendations.as_ref().map(|s| s.len()).unwrap_or(0));
     
     Ok(())
 }
@@ -239,9 +297,18 @@ fn get_api_patterns() -> Vec<ApiPattern> {
 
 fn scan_text_content(content: &str, location: &str, patterns: &[ApiPattern]) -> Vec<ApiKeyFinding> {
     let mut findings = Vec::new();
+    println!("🔍 Scanning {} with {} patterns in location: {}", 
+             if content.len() > 100 { format!("{}... ({} chars)", &content[..100], content.len()) } else { content.to_string() },
+             patterns.len(), location);
     
     for pattern in patterns {
-        for mat in pattern.pattern.find_iter(content) {
+        let matches: Vec<_> = pattern.pattern.find_iter(content).collect();
+        if !matches.is_empty() {
+            println!("⚠️ Found {} matches for pattern '{}' in {}", matches.len(), pattern.name, location);
+        }
+        
+        for mat in matches {
+            println!("🔴 API Key detected: {} in {}", pattern.name, location);
             let finding = ApiKeyFinding {
                 id: Uuid::new_v4().to_string(),
                 key_type: pattern.name.clone(),
@@ -256,6 +323,10 @@ fn scan_text_content(content: &str, location: &str, patterns: &[ApiPattern]) -> 
             };
             findings.push(finding);
         }
+    }
+    
+    if findings.is_empty() {
+        println!("✅ No API keys found in {}", location);
     }
     
     findings

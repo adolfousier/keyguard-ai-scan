@@ -10,80 +10,18 @@ interface AIRecommendationRequest {
 }
 
 export class AIRecommendationService {
-  private apiKey: string;
-  private baseUrl: string;
-
   constructor() {
-    // These would normally come from environment variables
-    this.apiKey = 'demo-key'; // NEURA_ROUTER_API_KEY
-    this.baseUrl = 'https://api.neura-router.com/v1'; // NEURA_ROUTER_API_URL
+    // Frontend only provides mock recommendations
+    // Real AI processing happens on the backend
   }
 
   async getRecommendations(request: AIRecommendationRequest): Promise<string> {
-    try {
-      // For demo purposes, return mock recommendations
-      // In production, this would call the actual NEURA_ROUTER API
-      return this.generateMockRecommendations(request);
-    } catch (error) {
-      console.error('AI recommendation failed:', error);
-      return this.getFallbackRecommendations(request);
-    }
+    // Frontend only provides mock recommendations
+    // Real AI processing happens on the backend via /api/scan endpoint
+    return this.generateMockRecommendations(request);
   }
 
-  private async callNeuraRouter(request: AIRecommendationRequest): Promise<string> {
-    const prompt = this.buildPrompt(request);
-    
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a cybersecurity expert specializing in API key security. Provide specific, actionable recommendations for fixing exposed API keys.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        max_tokens: 1000,
-        temperature: 0.3
-      })
-    });
 
-    if (!response.ok) {
-      throw new Error(`API call failed: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  }
-
-  private buildPrompt(request: AIRecommendationRequest): string {
-    const findingsSummary = request.findings.map(f => 
-      `- ${f.type} (${f.severity}) in ${f.location}: ${f.description}`
-    ).join('\n');
-
-    return `
-Security Scan Results for: ${request.url}
-
-Exposed API Keys Found:
-${findingsSummary}
-
-Please provide:
-1. Immediate remediation steps for each finding
-2. Best practices to prevent future exposures
-3. Security implementation recommendations
-4. Risk assessment and priority guidance
-
-Format the response in clear sections with actionable steps.
-`;
-  }
 
   private generateMockRecommendations(request: AIRecommendationRequest): string {
     const hasHighSeverity = request.findings.some(f => 

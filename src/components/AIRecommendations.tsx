@@ -1,55 +1,18 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ApiKeyFinding } from "@/types/scan";
-import { AIRecommendationService } from "@/lib/ai-recommendations";
-import { Brain, Copy, Check, RefreshCw } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Copy, Check, Shield, AlertTriangle, CheckCircle, Lightbulb, Lock, Zap } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface AIRecommendationsProps {
-  findings: ApiKeyFinding[];
-  url: string;
+  recommendations: string;
+  hasFindings?: boolean;
 }
 
-export const AIRecommendations = ({ findings, url }: AIRecommendationsProps) => {
-  const [recommendations, setRecommendations] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRecommendationsProps) => {
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const aiService = new AIRecommendationService();
-
-  const loadRecommendations = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const formattedFindings = findings.map(f => ({
-        type: f.type,
-        severity: f.severity,
-        description: f.description,
-        location: f.location
-      }));
-
-      const result = await aiService.getRecommendations({
-        findings: formattedFindings,
-        url
-      });
-      
-      setRecommendations(result);
-    } catch (err) {
-      setError('Failed to generate AI recommendations. Please try again.');
-      console.error('AI recommendations error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadRecommendations();
-  }, [findings, url]);
 
   const copyToClipboard = async () => {
     try {
@@ -61,119 +24,139 @@ export const AIRecommendations = ({ findings, url }: AIRecommendationsProps) => 
     }
   };
 
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Brain className="h-6 w-6 text-purple-600 animate-pulse" />
-            <span>AI Security Recommendations</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-500">Generating intelligent security recommendations...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
-  if (error) {
-    return (
-      <Card className="border-red-200">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-red-600">
-            <Brain className="h-6 w-6" />
-            <span>AI Recommendations Error</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={loadRecommendations} variant="outline">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
-    <Card className="border-purple-200">
-      <CardHeader>
+    <Card className="border-l-4 border-l-purple-500 shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <Brain className="h-6 w-6 text-purple-600" />
-            <span>AI Security Recommendations</span>
-          </CardTitle>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Brain className="h-6 w-6 text-purple-600" />
+            </div>
+            <div>
+              <CardTitle className="text-xl font-bold text-gray-900">
+                AI Security Analysis
+              </CardTitle>
+              <p className="text-sm text-gray-600 mt-1">
+                {hasFindings ? 'Vulnerability Assessment & Remediation' : 'Security Best Practices Review'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge variant={hasFindings ? "destructive" : "secondary"} className="px-3 py-1">
+              {hasFindings ? (
+                <>
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  Action Required
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  All Clear
+                </>
+              )}
+            </Badge>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={copyToClipboard}
               disabled={copied}
+              className="bg-white hover:bg-gray-50"
             >
               {copied ? (
                 <>
-                  <Check className="h-4 w-4 mr-2" />
+                  <Check className="h-4 w-4 mr-2 text-green-600" />
                   Copied
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy
+                  Copy Report
                 </>
               )}
-            </Button>
-            <Button variant="outline" size="sm" onClick={loadRecommendations}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         <div className="prose prose-sm max-w-none">
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg mb-4">
-            <p className="text-sm text-purple-700 font-medium mb-2">
-              🤖 AI-Powered Analysis
-            </p>
-            <p className="text-sm text-gray-600">
-              These recommendations are generated by advanced AI to help you secure your application. 
-              Review each suggestion carefully and adapt them to your specific environment.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+              <Zap className="h-5 w-5 text-blue-600" />
+              <div>
+                <p className="font-medium text-blue-900 text-sm">AI-Powered</p>
+                <p className="text-xs text-blue-700">Advanced Analysis</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+              <Shield className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="font-medium text-green-900 text-sm">Security Focused</p>
+                <p className="text-xs text-green-700">Best Practices</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
+              <Lightbulb className="h-5 w-5 text-orange-600" />
+              <div>
+                <p className="font-medium text-orange-900 text-sm">Actionable</p>
+                <p className="text-xs text-orange-700">Step-by-Step</p>
+              </div>
+            </div>
           </div>
           
-          <div className="markdown-content">
+          <div className="markdown-content bg-white rounded-lg border p-6">
             <ReactMarkdown
               components={{
-                h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-2" {...props} />,
-                h2: ({node, ...props}) => <h2 className="text-xl font-semibold text-gray-800 mb-3 mt-6" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-lg font-medium text-gray-700 mb-2 mt-4" {...props} />,
-                p: ({node, ...props}) => <p className="text-gray-600 mb-3 leading-relaxed" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 space-y-1" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 space-y-1" {...props} />,
-                li: ({node, ...props}) => <li className="text-gray-600" {...props} />,
+                h1: ({node, ...props}) => (
+                  <div className="flex items-center space-x-2 mb-6">
+                    <Lock className="h-6 w-6 text-red-600" />
+                    <h1 className="text-2xl font-bold text-gray-900 border-b-2 border-red-200 pb-1" {...props} />
+                  </div>
+                ),
+                h2: ({node, ...props}) => (
+                  <div className="flex items-center space-x-2 mb-4 mt-8">
+                    <div className="w-2 h-6 bg-blue-500 rounded"></div>
+                    <h2 className="text-xl font-semibold text-gray-800" {...props} />
+                  </div>
+                ),
+                h3: ({node, ...props}) => (
+                  <div className="flex items-center space-x-2 mb-3 mt-6">
+                    <div className="w-1.5 h-5 bg-purple-400 rounded"></div>
+                    <h3 className="text-lg font-medium text-gray-700" {...props} />
+                  </div>
+                ),
+                p: ({node, ...props}) => <p className="text-gray-700 mb-4 leading-relaxed" {...props} />,
+                ul: ({node, ...props}) => <ul className="space-y-2 mb-6" {...props} />,
+                ol: ({node, ...props}) => <ol className="space-y-2 mb-6" {...props} />,
+                li: ({node, ...props}) => (
+                  <li className="flex items-start space-x-2 text-gray-700">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <span {...props} />
+                  </li>
+                ),
                 code: ({node, ...props}) => {
                   const isCodeBlock = props.className?.includes('language-');
                   return isCodeBlock ? (
-                    <code className="block bg-gray-100 p-3 rounded-lg text-sm font-mono overflow-x-auto" {...props} />
+                    <div className="relative">
+                      <code className="block bg-gray-900 text-green-400 p-4 rounded-lg text-sm font-mono overflow-x-auto border" {...props} />
+                      <div className="absolute top-2 right-2">
+                        <Badge variant="secondary" className="text-xs">Code</Badge>
+                      </div>
+                    </div>
                   ) : (
-                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono" {...props} />
+                    <code className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm font-mono border" {...props} />
                   );
                 },
                 blockquote: ({node, ...props}) => (
-                  <blockquote className="border-l-4 border-blue-400 pl-4 py-2 bg-blue-50 rounded-r mb-4" {...props} />
+                  <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 rounded-r-lg mb-6">
+                    <div className="flex items-start space-x-2">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <blockquote className="text-yellow-800 font-medium" {...props} />
+                    </div>
+                  </div>
                 ),
-                strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                strong: ({node, ...props}) => <strong className="font-bold text-gray-900 bg-yellow-100 px-1 rounded" {...props} />,
               }}
             >
               {recommendations}
@@ -181,11 +164,17 @@ export const AIRecommendations = ({ findings, url }: AIRecommendationsProps) => 
           </div>
         </div>
         
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-500">
-            💡 These recommendations are AI-generated and should be reviewed by your security team. 
-            KeyGuard AI Scan is not responsible for implementation decisions.
-          </p>
+        <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border">
+          <div className="flex items-start space-x-2">
+            <Lightbulb className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-1">Important Notice</p>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                These recommendations are AI-generated based on security best practices and should be reviewed by your security team. 
+                Always test changes in a development environment first. KeyGuard AI Scan provides guidance but implementation decisions remain your responsibility.
+              </p>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

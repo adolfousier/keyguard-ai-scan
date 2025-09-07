@@ -279,11 +279,33 @@ docker-compose -f docker-compose.prod.yml up -d
 - **Issues**: GitHub Issues for bug reports
 - **Discussions**: Feature requests and questions
 - **Discord**: Real-time community support
-- **Security**: adolfo@meetneura.ai for vulnerabilities
+- **Security**: security@keyguard.dev for vulnerabilities
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📝 Changelog
+
+### v0.1.2 (Latest)
+- **Enhanced AI Integration**: Improved NEURA_ROUTER integration with better error handling
+- **Backend Improvements**: Enhanced scanner module with better pattern matching
+- **Database Optimizations**: Improved LibSQL integration and query performance
+- **Authentication Enhancements**: Strengthened JWT handling and user session management
+- **Frontend Updates**: Better AI recommendations display and user experience
+- **Configuration**: Updated environment variables and API endpoints
+- **Build System**: Improved Vite configuration and development workflow
+- **Security**: Enhanced input validation and sanitization
+
+### v0.1.1
+- README documentation updates
+- Minor bug fixes and improvements
+
+### v0.1.0
+- Initial release with core scanning functionality
+- Basic AI-powered recommendations
+- User authentication system
+- Docker containerization
 
 ## 🙏 Acknowledgments
 

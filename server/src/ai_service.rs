@@ -2,9 +2,9 @@
 use serde::{Deserialize, Serialize};
 use anyhow::Result;
 use reqwest::Client;
-use std::env;
 
 use crate::scanner::ApiKeyFinding;
+use crate::utils::environment_settings::EnvironmentSettings;
 
 #[derive(Serialize)]
 struct AIRequest {
@@ -12,6 +12,7 @@ struct AIRequest {
     messages: Vec<Message>,
     max_tokens: u32,
     temperature: f32,
+    stream: bool,
 }
 
 #[derive(Serialize)]
@@ -39,34 +40,49 @@ pub struct AIService {
     client: Client,
     api_key: String,
     base_url: String,
+    model: String,
 }
 
 impl AIService {
     pub fn new() -> Self {
+        let settings = EnvironmentSettings::load();
         Self {
             client: Client::new(),
-            api_key: env::var("NEURA_ROUTER_API_KEY").unwrap_or_else(|_| "demo-key".to_string()),
-            base_url: env::var("NEURA_ROUTER_API_URL").unwrap_or_else(|_| "https://api.neura-router.com/v1".to_string()),
+            api_key: settings.neura_router_api_key,
+            base_url: settings.neura_router_api_url,
+            model: settings.neura_router_api_model,
         }
     }
 
-    pub async fn generate_recommendations(&self, findings: &[ApiKeyFinding], url: &str) -> Result<String> {
-        if findings.is_empty() {
-            return Ok(self.generate_no_findings_response(url));
-        }
-
-        let prompt = self.build_prompt(findings, url);
+    pub async fn generate_recommendations(&self, findings: &[ApiKeyFinding], url: &str, content_summary: Option<&str>) -> Result<String> {
+        let prompt = if findings.is_empty() {
+            println!("📋 No findings detected, calling AI for clean report: {}", url);
+            if let Some(content) = content_summary {
+                format!(
+                    "Analyze this website for security vulnerabilities:\n\n{}\n\nNo API keys found. Provide security analysis and recommendations.",
+                    content
+                )
+            } else {
+                format!("Security scan completed for {}. No API keys found. Provide security recommendations.", url)
+            }
+        } else {
+            println!("🤖 Generating AI recommendations for {} findings", findings.len());
+            self.build_prompt(findings, url, content_summary)
+        };
         
-        // Try to call the AI service, fallback to mock if it fails
-        match self.call_ai_service(&prompt).await {
-            Ok(response) => Ok(response),
-            Err(_) => Ok(self.generate_mock_recommendations(findings, url)),
-        }
+        // ALWAYS call the real AI service - NO MOCKS, NO FALLBACKS
+        println!("🚀 CALLING REAL NEURA_ROUTER API...");
+        self.call_ai_service(&prompt).await
     }
 
     async fn call_ai_service(&self, prompt: &str) -> Result<String> {
+        println!("🚀 CALLING AI SERVICE AT: {}", self.base_url);
+        println!("🤖 USING MODEL: {}", self.model);
+        println!("🔑 API KEY: {}...{} (length: {})", &self.api_key[..10], &self.api_key[self.api_key.len()-10..], self.api_key.len());
+        println!("📝 PROMPT: {}", &prompt[..200.min(prompt.len())]);
+        
         let request = AIRequest {
-            model: "gpt-4".to_string(),
+            model: self.model.clone(),
             messages: vec![
                 Message {
                     role: "system".to_string(),
@@ -77,42 +93,111 @@ impl AIService {
                     content: prompt.to_string(),
                 },
             ],
-            max_tokens: 1000,
-            temperature: 0.3,
+            max_tokens: 8192,
+            temperature: 0.7,
+            stream: true,
         };
 
+        let url = format!("{}/chat/completions", self.base_url);
+        println!("📡 MAKING REQUEST TO: {}", url);
+        println!("📦 REQUEST PAYLOAD: {}", serde_json::to_string_pretty(&request).unwrap_or_else(|_| "Failed to serialize".to_string()));
+        
         let response = self.client
-            .post(&format!("{}/chat/completions", self.base_url))
+            .post(&url)
             .header("Authorization", format!("Bearer {}", self.api_key))
             .header("Content-Type", "application/json")
             .json(&request)
             .send()
             .await?;
 
-        if !response.status().is_success() {
-            return Err(anyhow::anyhow!("AI service request failed"));
+        let status = response.status();
+        println!("📊 RESPONSE STATUS: {}", status);
+        
+        if !status.is_success() {
+            let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+            println!("❌ AI SERVICE ERROR RESPONSE: {}", error_text);
+            return Err(anyhow::anyhow!("AI service request failed with status: {} - {}", status, error_text));
         }
 
-        let ai_response: AIResponse = response.json().await?;
-        Ok(ai_response.choices[0].message.content.clone())
+        let response_text = response.text().await?;
+        println!("📨 RAW RESPONSE: {}", &response_text[..response_text.len().min(200)]);
+        
+        // NEURA_ROUTER always returns streaming data, parse it directly
+        self.parse_streaming_response(&response_text)
     }
 
-    fn build_prompt(&self, findings: &[ApiKeyFinding], url: &str) -> String {
+    fn parse_streaming_response(&self, response_text: &str) -> Result<String> {
+        let mut content = String::new();
+        println!("🔍 Parsing streaming response with {} lines", response_text.lines().count());
+        
+        for (i, line) in response_text.lines().enumerate() {
+            if line.starts_with("data: ") {
+                let data_part = line[6..].trim(); // Remove "data: " prefix and trim
+                
+                if data_part == "[DONE]" {
+                    println!("✅ Found [DONE] marker at line {}", i);
+                    break;
+                }
+                
+                if data_part.is_empty() {
+                    continue;
+                }
+                
+                match serde_json::from_str::<serde_json::Value>(data_part) {
+                    Ok(json) => {
+                        if let Some(choices) = json.get("choices").and_then(|c| c.as_array()) {
+                            if let Some(choice) = choices.first() {
+                                if let Some(delta) = choice.get("delta").and_then(|d| d.as_object()) {
+                                    if let Some(text) = delta.get("content").and_then(|c| c.as_str()) {
+                                        content.push_str(text);
+                                        print!("{}", text);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Err(e) => {
+                        println!("⚠️ Failed to parse JSON chunk at line {}: {} - Data: {}", i, e, data_part);
+                        continue;
+                    }
+                }
+            }
+        }
+        
+        println!(""); // New line after streaming output
+        
+        if content.is_empty() {
+            println!("⚠️ No content extracted from streaming response");
+            Ok("# Security Analysis\n\nThe AI service returned an empty response. This could indicate:\n\n1. **API Configuration Issue** - Check your NEURA_ROUTER API key and model settings\n2. **Rate Limiting** - The service may be temporarily unavailable\n3. **Model Issue** - The selected model may not be responding properly\n\n## Recommendations\n\n- Verify your API credentials\n- Try again in a few minutes\n- Check the service status".to_string())
+        } else {
+            println!("✅ Successfully parsed streaming response, content length: {}", content.len());
+            Ok(content)
+        }
+    }
+
+    fn build_prompt(&self, findings: &[ApiKeyFinding], url: &str, content_summary: Option<&str>) -> String {
         let findings_summary = findings.iter()
             .map(|f| format!("- {} ({}) in {}: {}", f.key_type, f.severity, f.location, f.description))
             .collect::<Vec<_>>()
             .join("\n");
 
+        let content_section = if let Some(content) = content_summary {
+            format!("\n\nWebsite Content Analysis:\n{}", content)
+        } else {
+            String::new()
+        };
+        
         format!(
             "Security Scan Results for: {}\n\n\
-            Exposed API Keys Found:\n{}\n\n\
+            Exposed API Keys Found:\n{}{}\n\n\
             Please provide:\n\
             1. Immediate remediation steps for each finding\n\
             2. Best practices to prevent future exposures\n\
             3. Security implementation recommendations\n\
-            4. Risk assessment and priority guidance\n\n\
+            4. Risk assessment and priority guidance\n\
+            5. Analysis of the website content for additional security concerns\n\n\
             Format the response in clear sections with actionable steps.",
-            url, findings_summary
+            url, findings_summary, content_section
         )
     }
 

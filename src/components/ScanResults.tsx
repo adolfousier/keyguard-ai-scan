@@ -13,10 +13,13 @@ import {
   MapPin,
   TrendingUp,
   CheckCircle,
-  XCircle
+  XCircle,
+  Brain,
+  Copy
 } from "lucide-react";
 import { useState } from "react";
 import { AIRecommendations } from "./AIRecommendations";
+import ReactMarkdown from "react-markdown";
 
 interface ScanResultsProps {
   result: ScanResult;
@@ -25,6 +28,14 @@ interface ScanResultsProps {
 
 export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
   const [showRecommendations, setShowRecommendations] = useState(false);
+  
+  // Debug logging
+  console.log('ScanResults received:', {
+    aiRecommendations: result.aiRecommendations,
+    aiRecommendationsLength: result.aiRecommendations?.length,
+    status: result.status,
+    findings: result.findings.length
+  });
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -153,13 +164,26 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
             </div>
           </div>
 
-          {result.summary.total > 0 && (
+          {result.aiRecommendations && (
             <div className="mt-4">
               <Button 
                 onClick={() => setShowRecommendations(!showRecommendations)}
                 className="w-full"
+                variant={showRecommendations ? "outline" : "default"}
               >
-                {showRecommendations ? 'Hide' : 'Get'} AI Recommendations
+                {showRecommendations ? 'Hide' : 'View'} AI Security Analysis
+              </Button>
+            </div>
+          )}
+
+          {result.aiRecommendations && (
+            <div className="mt-4">
+              <Button 
+                onClick={() => setShowRecommendations(!showRecommendations)}
+                className="w-full"
+                variant={showRecommendations ? "outline" : "default"}
+              >
+                {showRecommendations ? 'Hide' : 'View'} AI Security Analysis
               </Button>
             </div>
           )}
@@ -167,10 +191,17 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
       </Card>
 
       {/* AI Recommendations */}
-      {showRecommendations && (
+      {showRecommendations && result.aiRecommendations && (
         <AIRecommendations 
-          findings={result.findings}
-          url={result.url}
+          recommendations={result.aiRecommendations}
+          hasFindings={result.summary.total > 0}
+        />
+      )}
+
+      {/* AI Recommendations */}
+      {showRecommendations && result.aiRecommendations && (
+        <AIRecommendations 
+          recommendations={result.aiRecommendations}
         />
       )}
 
@@ -199,71 +230,184 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
       {/* Findings List */}
       <Card>
         <CardHeader>
-          <CardTitle>Detailed Findings</CardTitle>
+          <CardTitle>Detailed Findings & AI Analysis</CardTitle>
         </CardHeader>
         <CardContent>
+          {/* AI Recommendations Section */}
+          {result.aiRecommendations && result.aiRecommendations.trim() !== "" && (
+            <div className="mb-8">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
+                  <Brain className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">AI Security Analysis</h3>
+                <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                  Powered by AI
+                </Badge>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
+                <div className="prose prose-sm max-w-none">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({node, ...props}) => (
+                        <h1 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-purple-200" {...props} />
+                      ),
+                      h2: ({node, ...props}) => (
+                        <h2 className="text-lg font-semibold text-gray-800 mb-3 mt-6 flex items-center" {...props}>
+                          <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full mr-3"></div>
+                          {props.children}
+                        </h2>
+                      ),
+                      h3: ({node, ...props}) => (
+                        <h3 className="text-base font-medium text-gray-700 mb-2 mt-4 flex items-center" {...props}>
+                          <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+                          {props.children}
+                        </h3>
+                      ),
+                      p: ({node, ...props}) => (
+                        <p className="text-gray-700 mb-3 leading-relaxed" {...props} />
+                      ),
+                      ul: ({node, ...props}) => (
+                        <ul className="space-y-2 mb-4" {...props} />
+                      ),
+                      ol: ({node, ...props}) => (
+                        <ol className="space-y-2 mb-4" {...props} />
+                      ),
+                      li: ({node, ...props}) => (
+                        <li className="text-gray-700 flex items-start" {...props}>
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <span>{props.children}</span>
+                        </li>
+                      ),
+                      code: ({node, ...props}) => {
+                        const isCodeBlock = props.className?.includes('language-');
+                        return isCodeBlock ? (
+                          <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm font-mono overflow-x-auto my-4 border border-gray-700">
+                            <code {...props} />
+                          </div>
+                        ) : (
+                          <code className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm font-mono" {...props} />
+                        );
+                      },
+                      blockquote: ({node, ...props}) => (
+                        <div className="border-l-4 border-purple-400 bg-purple-50 pl-4 py-3 rounded-r-lg mb-4">
+                          <blockquote className="text-purple-800 italic" {...props} />
+                        </div>
+                      ),
+                      strong: ({node, ...props}) => (
+                        <strong className="font-semibold text-gray-900 bg-yellow-100 px-1 rounded" {...props} />
+                      ),
+                    }}
+                  >
+                    {result.aiRecommendations}
+                  </ReactMarkdown>
+                </div>
+                
+                <div className="mt-6 flex items-center justify-between pt-4 border-t border-purple-200">
+                  <div className="flex items-center space-x-2 text-sm text-purple-600">
+                    <Brain className="h-4 w-4" />
+                    <span>AI-powered security analysis</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      navigator.clipboard.writeText(result.aiRecommendations || '');
+                    }}
+                    className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Analysis
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Findings Section */}
           {result.findings.length === 0 ? (
             <div className="text-center py-8">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+              <div className="bg-green-100 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <CheckCircle className="h-10 w-10 text-green-600" />
+              </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No API Keys Found</h3>
-              <p className="text-gray-600">Great! No exposed API keys were detected on this website.</p>
+              <p className="text-gray-600 max-w-md mx-auto">
+                Excellent! No exposed API keys were detected during the security scan. 
+                Your website follows good security practices.
+              </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {result.findings.map((finding, index) => (
-                <div key={finding.id} className="border rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      {getSeverityIcon(finding.severity)}
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{finding.type}</h4>
-                        <p className="text-sm text-gray-600">{finding.description}</p>
+            <div>
+              <div className="flex items-center space-x-2 mb-6">
+                <AlertTriangle className="h-5 w-5 text-orange-500" />
+                <h3 className="text-lg font-semibold text-gray-900">Security Issues Detected</h3>
+                <Badge variant="destructive">{result.findings.length} issues</Badge>
+              </div>
+              
+              <div className="space-y-6">
+                {result.findings.map((finding, index) => (
+                  <div key={finding.id} className="bg-white border border-red-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${
+                          finding.severity === 'critical' ? 'bg-red-100' :
+                          finding.severity === 'high' ? 'bg-orange-100' :
+                          finding.severity === 'medium' ? 'bg-yellow-100' : 'bg-blue-100'
+                        }`}>
+                          {getSeverityIcon(finding.severity)}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 text-lg">{finding.type}</h4>
+                          <p className="text-gray-600">{finding.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge className={getSeverityColor(finding.severity)}>
+                          {finding.severity.toUpperCase()}
+                        </Badge>
+                        <Badge variant="outline" className="bg-gray-50">
+                          {finding.confidence}% confidence
+                        </Badge>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getSeverityColor(finding.severity)}>
-                        {finding.severity.toUpperCase()}
-                      </Badge>
-                      <Badge variant="outline">
-                        {finding.confidence}% confidence
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Location: </span>
-                      <span className="text-sm text-gray-600">{finding.location}</span>
-                      {finding.lineNumber && (
-                        <span className="text-sm text-gray-500"> (Line {finding.lineNumber})</span>
-                      )}
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-50 p-3 rounded-lg">
+                        <span className="text-sm font-medium text-gray-700 block mb-1">Location</span>
+                        <span className="text-sm text-gray-900">{finding.location}</span>
+                        {finding.lineNumber && (
+                          <span className="text-sm text-gray-500 ml-2">(Line {finding.lineNumber})</span>
+                        )}
+                      </div>
+                      
+                      <div className="bg-gray-50 p-3 rounded-lg">
+                        <span className="text-sm font-medium text-gray-700 block mb-1">Detected Value</span>
+                        <code className="text-sm bg-white px-2 py-1 rounded border font-mono text-red-600">
+                          {finding.value}
+                        </code>
+                      </div>
                     </div>
                     
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Found: </span>
-                      <code className="text-sm bg-gray-100 px-2 py-1 rounded font-mono">
-                        {finding.value}
-                      </code>
-                    </div>
-                    
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Context: </span>
-                      <code className="text-sm bg-gray-50 px-2 py-1 rounded block mt-1 font-mono">
+                    <div className="bg-gray-50 p-3 rounded-lg mb-4">
+                      <span className="text-sm font-medium text-gray-700 block mb-2">Code Context</span>
+                      <code className="text-sm bg-white p-3 rounded border block font-mono text-gray-800 overflow-x-auto">
                         {finding.context}
                       </code>
                     </div>
 
                     {finding.recommendation && (
-                      <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                        <span className="text-sm font-medium text-blue-900">Recommendation: </span>
-                        <p className="text-sm text-blue-800">{finding.recommendation}</p>
+                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Shield className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium text-blue-900">Recommended Action</span>
+                        </div>
+                        <p className="text-sm text-blue-800 leading-relaxed">{finding.recommendation}</p>
                       </div>
                     )}
                   </div>
-                  
-                  {index < result.findings.length - 1 && <Separator className="mt-4" />}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </CardContent>

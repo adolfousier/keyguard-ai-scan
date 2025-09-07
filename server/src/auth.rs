@@ -5,14 +5,16 @@ use bcrypt::{hash, verify, DEFAULT_COST};
 use anyhow::Result;
 use axum::{
     async_trait,
-    extract::{FromRequestParts, TypedHeader},
-    headers::{Authorization, authorization::Bearer},
+    extract::FromRequestParts,
     http::request::Parts,
     RequestPartsExt,
 };
-use std::env;
-
+use axum_extra::{
+    headers::{Authorization, authorization::Bearer},
+    TypedHeader,
+};
 use crate::database::Database;
+use crate::utils::environment_settings::EnvironmentSettings;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -21,6 +23,7 @@ pub struct Claims {
     pub exp: usize,
 }
 
+#[derive(Clone)]
 pub struct AuthService {
     encoding_key: EncodingKey,
     decoding_key: DecodingKey,
@@ -28,10 +31,10 @@ pub struct AuthService {
 
 impl AuthService {
     pub fn new() -> Self {
-        let secret = env::var("JWT_SECRET").unwrap_or_else(|_| "keyguard-secret-key".to_string());
+        let settings = EnvironmentSettings::load();
         Self {
-            encoding_key: EncodingKey::from_secret(secret.as_ref()),
-            decoding_key: DecodingKey::from_secret(secret.as_ref()),
+            encoding_key: EncodingKey::from_secret(settings.jwt_secret.as_ref()),
+            decoding_key: DecodingKey::from_secret(settings.jwt_secret.as_ref()),
         }
     }
 
@@ -98,7 +101,7 @@ where
     type Rejection = axum::http::StatusCode;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        let TypedHeader(Authorization(bearer)) = parts
+        let TypedHeader(Authorization(_bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| axum::http::StatusCode::UNAUTHORIZED)?;

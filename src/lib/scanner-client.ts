@@ -43,7 +43,10 @@ export class ScannerClient {
       try {
         const result = await this.getScanResult(scanId);
         
+        console.log('Polling result:', result);
+        
         if (result.status === 'completed') {
+          console.log('Scan completed, calling onComplete');
           analytics.trackScanCompleted(
             result.url,
             result.end_time ? new Date(result.end_time).getTime() - new Date(result.start_time).getTime() : 0,
@@ -57,18 +60,13 @@ export class ScannerClient {
           throw new Error('Scan failed');
         }
         
-        // Get progress
-        try {
-          const progress = await this.getScanProgress(scanId);
-          onProgress(progress);
-        } catch {
-          // Progress endpoint might not have data yet
-          onProgress({
-            stage: 'Scanning',
-            progress: result.completed_checks / result.total_checks * 100,
-            message: `Completed ${result.completed_checks}/${result.total_checks} checks`,
-          });
-        }
+        // Show progress
+        const progressPercent = result.total_checks > 0 ? (result.completed_checks / result.total_checks * 100) : 50;
+        onProgress({
+          stage: result.status === 'scanning' ? 'Analyzing website...' : 'Processing results...',
+          progress: progressPercent,
+          message: `Completed ${result.completed_checks}/${result.total_checks || 'unknown'} checks`,
+        });
         
         // Continue polling
         setTimeout(poll, 2000);

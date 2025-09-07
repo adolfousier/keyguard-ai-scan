@@ -1,12 +1,13 @@
 
 import { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScanProgress } from "@/components/ScanProgress";
 import { ScanResults } from "@/components/ScanResults";
-import { WebsiteScanner } from "@/lib/scanner";
+import { scannerClient } from "@/lib/scanner-client";
 import { ScanResult, ScanProgress as ScanProgressType } from "@/types/scan";
 import { analytics } from "@/lib/analytics";
 import { 
@@ -26,6 +27,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState<ScanProgressType | null>(null);
@@ -36,6 +38,8 @@ const Index = () => {
   }, []);
 
   const handleScan = useCallback(async () => {
+    console.log('handleScan function called with URL:', url);
+    
     if (!url.trim()) {
       toast({
         title: "URL Required",
@@ -45,44 +49,44 @@ const Index = () => {
       return;
     }
 
+    console.log('Setting isScanning to true');
     setIsScanning(true);
     setScanResult(null);
-    setScanProgress(null);
+    setScanProgress({
+      stage: 'Initializing scan...',
+      progress: 5,
+      message: 'Starting security analysis'
+    });
     
-    const startTime = Date.now();
     analytics.trackScanStarted(url);
 
     try {
-      const scanner = new WebsiteScanner((progress) => {
-        setScanProgress(progress);
+      toast({
+        title: "Scan Started",
+        description: `Analyzing ${url} for security vulnerabilities...`,
       });
-
-      const result = await scanner.scanUrl(url);
-      setScanResult(result);
       
-      const duration = Date.now() - startTime;
-      analytics.trackScanCompleted(url, duration, result.findings.length);
-
-      if (result.status === 'completed') {
-        toast({
-          title: "Scan Completed",
-          description: `Found ${result.findings.length} potential security issues.`,
-        });
-      }
+      // Test immediate redirect
+      navigate('/scan-results?id=test-123');
+      return;
+      
+      const scanResult = await scannerClient.startScan({ url });
+      navigate(`/scan-results?id=${scanResult.id}`);
     } catch (error) {
       console.error('Scan error:', error);
-      analytics.trackScanFailed(url, error instanceof Error ? error.message : 'Unknown error');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      analytics.trackScanFailed(url, errorMessage);
       
       toast({
         title: "Scan Failed",
         description: "Unable to complete the scan. Please check the URL and try again.",
         variant: "destructive",
       });
-    } finally {
+      
       setIsScanning(false);
       setScanProgress(null);
     }
-  }, [url]);
+  }, [url, navigate]);
 
   const resetScan = useCallback(() => {
     setUrl("");
@@ -182,10 +186,10 @@ const Index = () => {
                   <Input
                     id="url"
                     type="url"
-                    placeholder="https://example.com"
+                    placeholder="https://your-website.com"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleScan()}
+                    onKeyPress={(e) => e.key === 'Enter' && alert('Enter pressed!')}
                     className="text-lg py-3"
                     disabled={isScanning}
                   />
@@ -195,14 +199,17 @@ const Index = () => {
                 </div>
                 
                 <Button 
-                  onClick={handleScan} 
+                  onClick={() => {
+                    alert('Button clicked!');
+                    window.location.href = '/scan-results?id=test-123';
+                  }}
                   disabled={isScanning || !url.trim()}
-                  className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isScanning ? (
                     <>
-                      <Search className="h-5 w-5 mr-2 animate-spin" />
-                      Scanning...
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Analyzing Website...
                     </>
                   ) : (
                     <>

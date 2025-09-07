@@ -1,5 +1,5 @@
 
-use libsql::{Connection, Database as LibSqlDatabase};
+use libsql::Connection;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use chrono::{DateTime, Utc};
@@ -22,7 +22,7 @@ pub struct User {
 
 impl Database {
     pub async fn new() -> Result<Self> {
-        let db = LibSqlDatabase::open(":memory:").await?;
+        let db = libsql::Builder::new_local(":memory:").build().await?;
         let conn = db.connect()?;
         
         let database = Self { conn };
@@ -94,7 +94,7 @@ impl Database {
     pub async fn get_user_by_email(&self, email: &str) -> Result<Option<User>> {
         let mut rows = self.conn.query(
             "SELECT id, email, password_hash, created_at FROM users WHERE email = ?",
-            (email,),
+            [email],
         ).await?;
 
         if let Some(row) = rows.next().await? {
@@ -143,7 +143,7 @@ impl Database {
         let mut rows = self.conn.query(
             "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary 
              FROM scans WHERE id = ?",
-            (scan_id,),
+            [scan_id],
         ).await?;
 
         if let Some(row) = rows.next().await? {
@@ -182,7 +182,7 @@ impl Database {
     pub async fn get_scan_progress(&self, scan_id: &str) -> Result<Option<ScanProgress>> {
         let mut rows = self.conn.query(
             "SELECT stage, progress, message FROM scan_progress WHERE scan_id = ?",
-            (scan_id,),
+            [scan_id],
         ).await?;
 
         if let Some(row) = rows.next().await? {
@@ -200,7 +200,7 @@ impl Database {
         let mut rows = self.conn.query(
             "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary 
              FROM scans WHERE user_id = ? ORDER BY created_at DESC",
-            (user_id,),
+            [user_id],
         ).await?;
 
         let mut scans = Vec::new();
