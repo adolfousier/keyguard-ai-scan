@@ -37,9 +37,7 @@ const Index = () => {
     analytics.trackPageView('landing');
   }, []);
 
-  const handleScan = useCallback(async () => {
-    console.log('handleScan function called with URL:', url);
-    
+  const handleScan = () => {
     if (!url.trim()) {
       toast({
         title: "URL Required",
@@ -49,44 +47,11 @@ const Index = () => {
       return;
     }
 
-    console.log('Setting isScanning to true');
-    setIsScanning(true);
-    setScanResult(null);
-    setScanProgress({
-      stage: 'Initializing scan...',
-      progress: 5,
-      message: 'Starting security analysis'
-    });
+    if (isScanning) return;
     
-    analytics.trackScanStarted(url);
-
-    try {
-      toast({
-        title: "Scan Started",
-        description: `Analyzing ${url} for security vulnerabilities...`,
-      });
-      
-      // Test immediate redirect
-      navigate('/scan-results?id=test-123');
-      return;
-      
-      const scanResult = await scannerClient.startScan({ url });
-      navigate(`/scan-results?id=${scanResult.id}`);
-    } catch (error) {
-      console.error('Scan error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      analytics.trackScanFailed(url, errorMessage);
-      
-      toast({
-        title: "Scan Failed",
-        description: "Unable to complete the scan. Please check the URL and try again.",
-        variant: "destructive",
-      });
-      
-      setIsScanning(false);
-      setScanProgress(null);
-    }
-  }, [url, navigate]);
+    setIsScanning(true);
+    navigate('/scan-results?id=test-123');
+  };
 
   const resetScan = useCallback(() => {
     setUrl("");
@@ -189,7 +154,7 @@ const Index = () => {
                     placeholder="https://your-website.com"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && alert('Enter pressed!')}
+                    onKeyPress={(e) => e.key === 'Enter' && handleScan()}
                     className="text-lg py-3"
                     disabled={isScanning}
                   />
@@ -199,10 +164,7 @@ const Index = () => {
                 </div>
                 
                 <Button 
-                  onClick={() => {
-                    alert('Button clicked!');
-                    window.location.href = '/scan-results?id=test-123';
-                  }}
+                  onClick={handleScan}
                   disabled={isScanning || !url.trim()}
                   className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
