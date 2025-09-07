@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Brain, Zap, Globe, Search, Loader2, AlertTriangle } from "lucide-react";
 import { analytics } from "@/lib/analytics";
+import { apiClient } from "@/lib/api-client";
+import { toast } from "@/hooks/use-toast";
 
 interface HeroWithScanFormProps {
   isScanning: boolean;
@@ -21,6 +23,11 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
     
     if (!url.trim()) {
       console.log('No URL provided');
+      toast({
+        title: "URL Required",
+        description: "Please enter a website URL to scan.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -33,9 +40,27 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
     setIsScanning(true);
     analytics.trackScanStarted(url);
     
-    // Force immediate navigation for testing
-    console.log('Navigating to results page');
-    navigate('/scan-results?id=test-123');
+    try {
+      // Call the real backend API to start the scan
+      const scanResult = await apiClient.startScan({ url });
+      console.log('Scan started successfully:', scanResult);
+      
+      // Navigate to results page with the real scan ID
+      navigate(`/scan-results?id=${scanResult.id}`);
+    } catch (error) {
+      console.error('Scan failed:', error);
+      setIsScanning(false);
+      
+      // Show error to user
+      toast({
+        title: "Scan Failed",
+        description: error instanceof Error ? error.message : "Failed to start scan. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Track the failure
+      analytics.trackScanFailed(url, error instanceof Error ? error.message : "Unknown error");
+    }
   };
 
   const validateUrl = (url: string) => {

@@ -246,7 +246,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                 </Badge>
               </div>
               
-              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
+              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 rounded-xl p-6 border border-purple-200 dark:border-gray-600">
                 <div className="prose prose-sm max-w-none">
                   <ReactMarkdown
                     components={{
@@ -347,7 +347,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
               
               <div className="space-y-6">
                 {result.findings.map((finding, index) => (
-                  <div key={finding.id} className="bg-white border border-red-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <div key={finding.id} className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-red-200 dark:border-red-800/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         <div className={`p-2 rounded-lg ${

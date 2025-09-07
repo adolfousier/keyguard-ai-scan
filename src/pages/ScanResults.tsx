@@ -108,31 +108,31 @@ const ScanResultsPage = () => {
         <Navigation />
         <div className="pt-20">
           <div className="container mx-auto px-4 py-8">
-          <Card className="max-w-2xl mx-auto">
+          <Card className="max-w-2xl mx-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="h-6 w-6 text-blue-600 animate-pulse" />
+              <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
+                <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400 animate-pulse" />
                 <span>Scanning in Progress</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-6">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 dark:border-blue-400 mx-auto"></div>
                 
                 {result && (
                   <div className="space-y-4">
-                    <div className="text-lg font-medium text-gray-900">
+                    <div className="text-lg font-medium text-gray-900 dark:text-white">
                       Analyzing: {result.url}
                     </div>
                     
-                    <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                       <div 
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 h-3 rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>
                     
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
                       {result.completedChecks} of {result.totalChecks || '?'} checks completed ({Math.round(progress)}%)
                     </div>
                   </div>
@@ -158,11 +158,11 @@ const ScanResultsPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center">
         <Navigation />
         <div className="pt-20 flex items-center justify-center w-full h-full">
-        <Card className="max-w-md mx-auto">
+        <Card className="max-w-md mx-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
           <CardContent className="p-6 text-center">
-            <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold mb-2">Error Loading Results</h2>
-            <p className="text-gray-600 mb-4">{error || 'Scan results not found'}</p>
+            <XCircle className="h-12 w-12 text-red-500 dark:text-red-400 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Error Loading Results</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">{error || 'Scan results not found'}</p>
             <Button onClick={() => navigate('/')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Scanner
@@ -198,34 +198,34 @@ const ScanResultsPage = () => {
         </div>
 
         {/* Summary Card */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Shield className="h-6 w-6 text-blue-600" />
+            <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
+              <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               <span>Security Scan Results</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-gray-900">{result.summary.total}</div>
-                <div className="text-sm text-gray-600">Total Findings</div>
+              <div className="text-center p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{result.summary.total}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Total Findings</div>
               </div>
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <div className="text-2xl font-bold text-red-600">
+              <div className="text-center p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                   {result.summary.critical + result.summary.high}
                 </div>
-                <div className="text-sm text-gray-600">High Priority</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">High Priority</div>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">
+              <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                   {result.summary.medium + result.summary.low}
                 </div>
-                <div className="text-sm text-gray-600">Lower Priority</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Lower Priority</div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
+            <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300">
               <div className="flex items-center space-x-1">
                 <MapPin className="h-4 w-4" />
                 <span>{result.url}</span>
@@ -244,15 +244,15 @@ const ScanResultsPage = () => {
 
         {/* AI Analysis Section */}
         {result.aiRecommendations && (
-          <Card className="mb-8">
+          <Card className="mb-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
+                <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 dark:from-purple-400 dark:to-blue-400 rounded-lg">
                     <Brain className="h-5 w-5 text-white" />
                   </div>
                   <span>AI Security Analysis</span>
-                  <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                  <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 dark:from-purple-400 dark:to-blue-400 text-white">
                     Powered by AI
                   </Badge>
                 </CardTitle>
@@ -263,27 +263,27 @@ const ScanResultsPage = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
+              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 rounded-xl p-6 border border-purple-200 dark:border-gray-600">
                 <div className="prose prose-sm max-w-none">
                   <ReactMarkdown
                     components={{
                       h1: ({node, ...props}) => (
-                        <h1 className="text-2xl font-bold text-gray-900 mb-4 pb-2 border-b border-purple-200" {...props} />
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 pb-2 border-b border-purple-200 dark:border-gray-600" {...props} />
                       ),
                       h2: ({node, ...props}) => (
-                        <h2 className="text-xl font-semibold text-gray-800 mb-3 mt-6 flex items-center" {...props}>
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3 mt-6 flex items-center" {...props}>
                           <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full mr-3"></div>
                           {props.children}
                         </h2>
                       ),
                       h3: ({node, ...props}) => (
-                        <h3 className="text-lg font-medium text-gray-700 mb-2 mt-4 flex items-center" {...props}>
+                        <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2 mt-4 flex items-center" {...props}>
                           <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
                           {props.children}
                         </h3>
                       ),
                       p: ({node, ...props}) => (
-                        <p className="text-gray-700 mb-3 leading-relaxed" {...props} />
+                        <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed" {...props} />
                       ),
                       ul: ({node, ...props}) => (
                         <ul className="space-y-2 mb-4" {...props} />
@@ -292,7 +292,7 @@ const ScanResultsPage = () => {
                         <ol className="space-y-2 mb-4" {...props} />
                       ),
                       li: ({node, ...props}) => (
-                        <li className="text-gray-700 flex items-start" {...props}>
+                        <li className="text-gray-700 dark:text-gray-300 flex items-start" {...props}>
                           <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                           <span>{props.children}</span>
                         </li>
@@ -304,16 +304,16 @@ const ScanResultsPage = () => {
                             <code {...props} />
                           </div>
                         ) : (
-                          <code className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm font-mono" {...props} />
+                          <code className="bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-2 py-1 rounded text-sm font-mono" {...props} />
                         );
                       },
                       blockquote: ({node, ...props}) => (
-                        <div className="border-l-4 border-purple-400 bg-purple-50 pl-4 py-3 rounded-r-lg mb-4">
-                          <blockquote className="text-purple-800 italic" {...props} />
+                        <div className="border-l-4 border-purple-400 bg-purple-50 dark:bg-purple-900/30 pl-4 py-3 rounded-r-lg mb-4">
+                          <blockquote className="text-purple-800 dark:text-purple-200 italic" {...props} />
                         </div>
                       ),
                       strong: ({node, ...props}) => (
-                        <strong className="font-semibold text-gray-900 bg-yellow-100 px-1 rounded" {...props} />
+                        <strong className="font-semibold text-gray-900 dark:text-white bg-yellow-100 dark:bg-yellow-900/50 px-1 rounded" {...props} />
                       ),
                     }}
                   >
@@ -326,33 +326,33 @@ const ScanResultsPage = () => {
         )}
 
         {/* Findings Section */}
-        <Card>
+        <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
           <CardHeader>
-            <CardTitle>Security Findings</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">Security Findings</CardTitle>
           </CardHeader>
           <CardContent>
             {result.findings.length === 0 ? (
               <div className="text-center py-8">
-                <div className="bg-green-100 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                  <CheckCircle className="h-10 w-10 text-green-600" />
+                <div className="bg-green-100 dark:bg-green-900/30 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Security Issues Found</h3>
-                <p className="text-gray-600 max-w-md mx-auto">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Security Issues Found</h3>
+                <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
                   Excellent! No exposed API keys or security vulnerabilities were detected during the scan.
                 </p>
               </div>
             ) : (
               <div className="space-y-6">
                 {result.findings.map((finding) => (
-                  <div key={finding.id} className="bg-white border border-red-200 rounded-xl p-6 shadow-sm">
+                  <div key={finding.id} className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-red-200 dark:border-red-800/50 rounded-xl p-6 shadow-sm">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-red-100 rounded-lg">
-                          <AlertTriangle className="h-5 w-5 text-red-600" />
+                        <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                          <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-900 text-lg">{finding.type}</h4>
-                          <p className="text-gray-600">{finding.description}</p>
+                          <h4 className="font-semibold text-gray-900 dark:text-white text-lg">{finding.type}</h4>
+                          <p className="text-gray-600 dark:text-gray-300">{finding.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -366,36 +366,36 @@ const ScanResultsPage = () => {
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700 block mb-1">Location</span>
-                        <span className="text-sm text-gray-900">{finding.location}</span>
+                      <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">Location</span>
+                        <span className="text-sm text-gray-900 dark:text-white">{finding.location}</span>
                         {finding.lineNumber && (
-                          <span className="text-sm text-gray-500 ml-2">(Line {finding.lineNumber})</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">(Line {finding.lineNumber})</span>
                         )}
                       </div>
                       
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700 block mb-1">Detected Value</span>
-                        <code className="text-sm bg-white px-2 py-1 rounded border font-mono text-red-600">
+                      <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">Detected Value</span>
+                        <code className="text-sm bg-white dark:bg-gray-700 px-2 py-1 rounded border dark:border-gray-600 font-mono text-red-600 dark:text-red-400">
                           {finding.value}
                         </code>
                       </div>
                     </div>
                     
-                    <div className="bg-gray-50 p-3 rounded-lg mb-4">
-                      <span className="text-sm font-medium text-gray-700 block mb-2">Code Context</span>
-                      <code className="text-sm bg-white p-3 rounded border block font-mono text-gray-800 overflow-x-auto">
+                    <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg mb-4">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Code Context</span>
+                      <code className="text-sm bg-white dark:bg-gray-700 p-3 rounded border dark:border-gray-600 block font-mono text-gray-800 dark:text-gray-200 overflow-x-auto">
                         {finding.context}
                       </code>
                     </div>
 
                     {finding.recommendation && (
-                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50 p-4 rounded-lg">
                         <div className="flex items-center space-x-2 mb-2">
-                          <Shield className="h-4 w-4 text-blue-600" />
-                          <span className="text-sm font-medium text-blue-900">Recommended Action</span>
+                          <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">Recommended Action</span>
                         </div>
-                        <p className="text-sm text-blue-800 leading-relaxed">{finding.recommendation}</p>
+                        <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">{finding.recommendation}</p>
                       </div>
                     )}
                   </div>

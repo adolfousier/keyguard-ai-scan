@@ -27,18 +27,18 @@ export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRe
 
 
   return (
-    <Card className="border-l-4 border-l-purple-500 shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="border-l-4 border-l-purple-500 dark:border-l-purple-400 shadow-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0">
+      <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/30 dark:to-blue-900/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Brain className="h-6 w-6 text-purple-600" />
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+              <Brain className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-gray-900">
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
                 AI Security Analysis
               </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                 {hasFindings ? 'Vulnerability Assessment & Remediation' : 'Security Best Practices Review'}
               </p>
             </div>
@@ -62,7 +62,7 @@ export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRe
               size="sm" 
               onClick={copyToClipboard}
               disabled={copied}
-              className="bg-white hover:bg-gray-50"
+              className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
             >
               {copied ? (
                 <>
@@ -105,32 +105,32 @@ export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRe
             </div>
           </div>
           
-          <div className="markdown-content bg-white rounded-lg border p-6">
+          <div className="markdown-content bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <ReactMarkdown
               components={{
                 h1: ({node, ...props}) => (
                   <div className="flex items-center space-x-2 mb-6">
                     <Lock className="h-6 w-6 text-red-600" />
-                    <h1 className="text-2xl font-bold text-gray-900 border-b-2 border-red-200 pb-1" {...props} />
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white border-b-2 border-red-200 dark:border-red-800 pb-1" {...props} />
                   </div>
                 ),
                 h2: ({node, ...props}) => (
                   <div className="flex items-center space-x-2 mb-4 mt-8">
                     <div className="w-2 h-6 bg-blue-500 rounded"></div>
-                    <h2 className="text-xl font-semibold text-gray-800" {...props} />
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200" {...props} />
                   </div>
                 ),
                 h3: ({node, ...props}) => (
                   <div className="flex items-center space-x-2 mb-3 mt-6">
                     <div className="w-1.5 h-5 bg-purple-400 rounded"></div>
-                    <h3 className="text-lg font-medium text-gray-700" {...props} />
+                    <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300" {...props} />
                   </div>
                 ),
-                p: ({node, ...props}) => <p className="text-gray-700 mb-4 leading-relaxed" {...props} />,
+                p: ({node, ...props}) => <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed" {...props} />,
                 ul: ({node, ...props}) => <ul className="space-y-2 mb-6" {...props} />,
                 ol: ({node, ...props}) => <ol className="space-y-2 mb-6" {...props} />,
                 li: ({node, ...props}) => (
-                  <li className="flex items-start space-x-2 text-gray-700">
+                  <li className="flex items-start space-x-2 text-gray-700 dark:text-gray-300">
                     <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                     <span {...props} />
                   </li>
@@ -156,7 +156,7 @@ export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRe
                     </div>
                   </div>
                 ),
-                strong: ({node, ...props}) => <strong className="font-bold text-gray-900 bg-yellow-100 px-1 rounded" {...props} />,
+                strong: ({node, ...props}) => <strong className="font-bold text-gray-900 dark:text-white bg-yellow-100 dark:bg-yellow-900/50 px-1 rounded" {...props} />,
               }}
             >
               {recommendations}
