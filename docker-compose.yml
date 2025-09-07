@@ -9,7 +9,7 @@ services:
     ports:
       - "11111:11111"
     environment:
-      - VITE_API_URL=http://localhost:11112
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
     networks:
@@ -22,9 +22,10 @@ services:
     ports:
       - "11112:11112"
     environment:
-      - JWT_SECRET=keyguard-production-secret-key-change-this
-      - NEURA_ROUTER_API_KEY=${NEURA_ROUTER_API_KEY:-demo-key}
-      - NEURA_ROUTER_API_URL=${NEURA_ROUTER_API_URL:-https://api.neura-router.com/v1}
+      - JWT_SECRET=${JWT_SECRET}
+      - NEURA_ROUTER_API_KEY=${NEURA_ROUTER_API_KEY}
+      - NEURA_ROUTER_API_URL=${NEURA_ROUTER_API_URL}
+      - NEURA_ROUTER_API_MODEL=${NEURA_ROUTER_API_MODEL}
       - RUST_LOG=info
     networks:
       - keyguard-network
