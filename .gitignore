@@ -24,3 +24,4 @@ server/target/
 *.sln
 *.sw?
 .env
+PRD.md

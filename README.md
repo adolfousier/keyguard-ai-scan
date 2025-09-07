@@ -126,11 +126,11 @@ NEURA_ROUTER_API_URL=https://api.neura-router.com/v1
 RUST_LOG=info
 ```
 
-### API Keys Setup
+### Open AI Compatible API Keys Setup
 
 1. **NEURA_ROUTER Integration**
-   - Sign up at NEURA_ROUTER platform
-   - Generate API key with GPT-4 access
+   - Sign up at Neura Router or use your favotive AI platform
+   - Generate API key
    - Add to environment variables
 
 2. **Production Deployment**
@@ -287,7 +287,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.6 (Latest)
+### v0.1.7 (Latest)
+- **Professional Share & Export System**: Implemented comprehensive modular sharing and export functionality
+- **Advanced Export Formats**: Added Markdown, JSON, and CSV export options with branded professional reports
+- **Smart Social Sharing**: Integrated Twitter/X, LinkedIn, Facebook sharing with branded previews and security status
+- **Dark Mode Optimization**: Fixed AI Security Analysis white background issues for complete dark mode compatibility
+- **Docker Networking Fixes**: Resolved production deployment networking issues between frontend and backend containers
+- **Enhanced Reporting**: Comprehensive markdown reports with executive summaries, findings breakdowns, and AI recommendations
+- **Clipboard Integration**: One-click URL copying with native device sharing support
+- **Analytics Integration**: Added tracking for sharing and export events to understand user engagement
+- **Modular Architecture**: Created reusable ShareButton and ExportButton components for easy maintenance
+- **Professional Branding**: Consistent KeyGuard branding across all shared content and exported reports
+
+### v0.1.6
 - **Complete Frontend Architecture Overhaul**: Completely reorganized landing page into modular, maintainable components
 - **Modern Navigation System**: Implemented sticky navigation with glassmorphism design, backdrop blur, and automatic dark mode detection
 - **Responsive Hero Layout**: Combined hero section and scan form into elegant desktop side-by-side layout with mobile-first responsive design

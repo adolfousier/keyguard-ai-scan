@@ -64,7 +64,7 @@ To create the most comprehensive, user-friendly, and intelligent API key detecti
 
 ### AI Integration
 - **Provider**: NEURA_ROUTER (OpenAI-compatible endpoint)
-- **Model**: GPT-4 class models for intelligent analysis
+- **Model**: Qwen3 Latest class models for intelligent analysis
 - **Context**: Provide scan results + best practices for recommendations
 - **Fallback**: Built-in security guidelines when AI unavailable
 

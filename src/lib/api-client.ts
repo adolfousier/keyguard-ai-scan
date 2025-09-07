@@ -54,11 +54,12 @@ class APIClient {
   private token?: string;
 
   constructor() {
-    // Use relative URLs in production, absolute localhost for development
+    // Use environment variable or fallback to localhost for development
     const defaultUrl = window.location.hostname === 'localhost' 
       ? 'http://localhost:11112' 
       : '';
     this.baseUrl = import.meta.env.VITE_API_URL || defaultUrl;
+    console.log('API Client initialized with baseUrl:', this.baseUrl);
   }
 
   setToken(token: string) {

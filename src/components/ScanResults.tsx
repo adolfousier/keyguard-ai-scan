@@ -7,8 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { 
   AlertTriangle, 
   Shield, 
-  Download, 
-  Share, 
   Clock,
   MapPin,
   TrendingUp,
@@ -19,6 +17,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { AIRecommendations } from "./AIRecommendations";
+import { ShareButton } from "./ShareButton";
+import { ExportButton } from "./ExportButton";
 import ReactMarkdown from "react-markdown";
 
 interface ScanResultsProps {
@@ -57,36 +57,6 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
     }
   };
 
-  const exportResults = () => {
-    const data = {
-      url: result.url,
-      scanDate: result.startTime,
-      summary: result.summary,
-      findings: result.findings.map(f => ({
-        type: f.type,
-        severity: f.severity,
-        location: f.location,
-        description: f.description,
-        confidence: f.confidence
-      }))
-    };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `keyguard-scan-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const shareResults = () => {
-    const text = `KeyGuard AI Scan Results for ${result.url}\n${result.summary.total} potential issues found\n${result.summary.critical} critical, ${result.summary.high} high priority`;
-    navigator.share?.({ 
-      title: 'KeyGuard Scan Results', 
-      text 
-    }) || navigator.clipboard.writeText(text);
-  };
 
   if (result.status === 'failed') {
     return (
@@ -118,14 +88,8 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
               <span>Scan Results</span>
             </CardTitle>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" onClick={exportResults}>
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-              <Button variant="outline" size="sm" onClick={shareResults}>
-                <Share className="h-4 w-4 mr-2" />
-                Share
-              </Button>
+              <ExportButton result={result} />
+              <ShareButton result={result} />
             </div>
           </div>
         </CardHeader>

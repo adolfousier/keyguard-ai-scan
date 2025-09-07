@@ -9,8 +9,6 @@ import { useDarkMode } from "@/hooks/use-dark-mode";
 import { 
   Shield, 
   ArrowLeft, 
-  Download, 
-  Share, 
   Clock,
   MapPin,
   TrendingUp,
@@ -24,6 +22,8 @@ import ReactMarkdown from "react-markdown";
 import { scannerClient } from "@/lib/scanner-client";
 import { ScanResult } from "@/types/scan";
 import { toast } from "@/hooks/use-toast";
+import { ShareButton } from "@/components/ShareButton";
+import { ExportButton } from "@/components/ExportButton";
 
 const ScanResultsPage = () => {
   const [searchParams] = useSearchParams();
@@ -186,14 +186,8 @@ const ScanResultsPage = () => {
             New Scan
           </Button>
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-            <Button variant="outline" size="sm">
-              <Share className="h-4 w-4 mr-2" />
-              Share
-            </Button>
+            <ExportButton result={result} />
+            <ShareButton result={result} />
           </div>
         </div>
 
