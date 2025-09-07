@@ -32,9 +32,17 @@ const ScanForm = ({ isScanning, setIsScanning }: ScanFormProps) => {
     setIsScanning(true);
     analytics.trackEvent('scan_started', { url });
     
-    // Force immediate navigation for testing
-    console.log('Navigating to results page');
-    navigate('/scan-results?id=test-123');
+    try {
+      // Use real backend API
+      const { scannerClient } = await import('@/lib/scanner-client');
+      const result = await scannerClient.startScan({ url });
+      console.log('Scan started successfully:', result);
+      navigate(`/scan-results?id=${result.id}`);
+    } catch (error) {
+      console.error('Failed to start scan:', error);
+      setIsScanning(false);
+      // TODO: Show error message to user
+    }
   };
 
   const validateUrl = (url: string) => {
@@ -69,6 +77,11 @@ const ScanForm = ({ isScanning, setIsScanning }: ScanFormProps) => {
                   placeholder="https://example.com"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !isScanning && isValidUrl) {
+                      handleScan();
+                    }
+                  }}
                   className="pl-12 py-6 text-lg border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl"
                   disabled={isScanning}
                 />

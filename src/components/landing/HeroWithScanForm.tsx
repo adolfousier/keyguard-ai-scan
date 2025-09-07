@@ -132,6 +132,11 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
                       placeholder="https://example.com"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !isScanning && isValidUrl) {
+                          handleScan();
+                        }
+                      }}
                       className="pl-12 py-6 text-lg border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl"
                       disabled={isScanning}
                     />

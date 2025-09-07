@@ -286,7 +286,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.8 (Latest)
+### v0.1.9 (Latest)
+- **Real Backend Integration**: Replaced all mockup data and frontend scanning with real Rust backend API integration
+- **Enhanced User Experience**: Added Enter key support to both scan forms for faster form submission
+- **Code Cleanup**: Removed unused mockup files (scanner.ts, ai-recommendations.ts, HeroSection.tsx) for cleaner codebase
+- **Navigation Improvements**: Made navigation logo clickable to return to main page with hover effects
+- **Frontend Optimization**: Fixed scan form to use actual backend API calls instead of test navigation
+- **Production Ready**: Eliminated all mock data ensuring real scan counts and authentic results
+- **Error Handling**: Improved error handling with proper user feedback during scan failures
+- **Performance**: Streamlined frontend by removing duplicate components and unused code
+
+### v0.1.8
 - **Persistent Database Storage**: Fixed shared scan result URLs not persisting after app restart by switching from in-memory to file-based database storage
 - **Docker Volume Integration**: Added persistent volume mounting for database files in Docker containers to ensure data survives container restarts
 - **Environment Configuration**: Added DATABASE_PATH environment variable for configurable database file location

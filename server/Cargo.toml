@@ -1,7 +1,7 @@
 
 [package]
 name = "keyguard-backend"
-version = "0.1.8"
+version = "0.1.9"
 edition = "2024"
 authors = ["Adolfo Usier Neura AI <adolfo@meetneura.ai>"]
 
