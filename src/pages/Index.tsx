@@ -306,7 +306,7 @@ const Index = () => {
                 Start Free Scan
               </Button>
               <Button size="lg" variant="outline" className="bg-white text-gray-900 border-white hover:bg-purple-600 hover:text-white hover:border-purple-600" asChild>
-                <a href="https://github.com/keyguard-ai/scan" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/adolfousier/keyguard-ai-scan" target="_blank" rel="noopener noreferrer">
                   <Github className="h-5 w-5 mr-2" />
                   View on GitHub
                 </a>
@@ -322,7 +322,7 @@ const Index = () => {
           <div className="text-center text-gray-600">
             <p className="mb-2">
               Built with ❤️ by the security community • 
-              <a href="https://github.com/keyguard-ai/scan" className="text-blue-600 hover:underline ml-1">
+              <a href="https://github.com/adolfousier/keyguard-ai-scan" className="text-blue-600 hover:underline ml-1">
                 Open Source
               </a>
             </p>
