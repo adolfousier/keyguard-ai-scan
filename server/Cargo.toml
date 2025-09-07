@@ -3,6 +3,7 @@
 name = "keyguard-backend"
 version = "0.1.8"
 edition = "2024"
+authors = ["Adolfo Usier Neura AI <adolfo@meetneura.ai>"]
 
 [dependencies]
 tokio = { version = "1.0", features = ["full"] }
