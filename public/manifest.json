@@ -1,7 +1,7 @@
 {
   "name": "KeyGuard AI Scan",
   "short_name": "KeyGuard",
-  "description": "Open-source security tool that scans websites for exposed API keys with AI-powered recommendations",
+  "description": "Open-source security tool that scans websites for exposed API Keys & security issues with AI-powered recommendations",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

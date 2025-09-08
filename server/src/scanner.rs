@@ -30,6 +30,7 @@ pub struct ScanResult {
     pub completed_checks: u32,
     pub ai_recommendations: Option<String>,
     pub summary: ScanSummary,
+    pub security_analysis: Option<SecurityAnalysis>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -60,6 +61,18 @@ pub struct ScanSummary {
     pub medium: u32,
     pub low: u32,
     pub total: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct SecurityAnalysis {
+    pub frameworks: Vec<String>,
+    pub security_headers: HashMap<String, String>,
+    pub third_party_services: Vec<String>,
+    pub technologies: Vec<String>,
+    pub potential_endpoints: Vec<String>,
+    pub external_resources: Vec<String>,
+    pub form_actions: Vec<String>,
+    pub meta_tags: HashMap<String, String>,
 }
 
 #[derive(Debug)]
@@ -93,6 +106,7 @@ pub async fn start_scan(db: &Database, request: ScanRequest) -> Result<ScanResul
             low: 0,
             total: 0,
         },
+        security_analysis: None,
     };
 
     // Save initial scan state
@@ -127,6 +141,11 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     println!("📝 HTML content length: {} bytes", html_content.len());
     
     update_progress(&db, &scan_id, "Analyzing HTML content", 30).await?;
+    
+    // Perform comprehensive security analysis
+    let security_analysis = analyze_security_context(&html_content, &request.url)?;
+    println!("🔒 Security analysis completed: {} frameworks, {} technologies, {} services detected", 
+             security_analysis.frameworks.len(), security_analysis.technologies.len(), security_analysis.third_party_services.len());
     
     // Parse HTML and extract URLs synchronously
     let (script_urls, inline_scripts, css_urls) = {
@@ -199,18 +218,31 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     update_progress(&db, &scan_id, "Generating AI recommendations", 90).await?;
     println!("🤖 Total findings before AI analysis: {}", findings.len());
     
-    // Generate AI recommendations with actual content
+    // Generate AI recommendations with comprehensive security analysis
     let ai_service = AIService::new();
     let content_summary = format!(
-        "Website: {}\n\nContent Analysis:\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\nSample content for analysis:\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\nSecurity findings: {} issues detected",
+        "Website: {}\n\n## Comprehensive Security Analysis\n\n### Content Analysis\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\n### Technology Stack Detected\n- Frameworks: {}\n- Technologies: {}\n- Third-party Services: {}\n\n### Security-Relevant Findings\n- External Resources: {} detected\n- Potential API Endpoints: {}\n- Form Actions: {}\n- Meta Tags: {} analyzed\n\n### Sample Code Analysis\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\n### Security Scan Results\n- API Key Findings: {} issues detected\n- Pattern Matches: {} total patterns scanned\n\n### Detailed Security Context\n- Detected Frameworks: {:?}\n- Detected Technologies: {:?}\n- Third-party Services: {:?}\n- External Resources: {:?}\n- Potential API Endpoints: {:?}",
         request.url,
         html_content.len(),
         script_urls.len(),
         css_urls.len(),
         inline_scripts.len(),
+        if security_analysis.frameworks.is_empty() { "None detected".to_string() } else { security_analysis.frameworks.join(", ") },
+        if security_analysis.technologies.is_empty() { "None detected".to_string() } else { security_analysis.technologies.join(", ") },
+        if security_analysis.third_party_services.is_empty() { "None detected".to_string() } else { security_analysis.third_party_services.join(", ") },
+        security_analysis.external_resources.len(),
+        security_analysis.potential_endpoints.len(),
+        security_analysis.form_actions.len(),
+        security_analysis.meta_tags.len(),
         &html_content[..html_content.len().min(1000)],
         if !inline_scripts.is_empty() { &inline_scripts[0][..inline_scripts[0].len().min(500)] } else { "No inline scripts" },
-        findings.len()
+        findings.len(),
+        patterns.len(),
+        security_analysis.frameworks,
+        security_analysis.technologies,
+        security_analysis.third_party_services,
+        security_analysis.external_resources.iter().take(10).collect::<Vec<_>>(),
+        security_analysis.potential_endpoints
     );
     let ai_recommendations = ai_service.generate_recommendations(&findings, &request.url, Some(&content_summary)).await?;
     println!("✨ AI recommendations generated successfully");
@@ -233,6 +265,7 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         completed_checks: total_checks,
         ai_recommendations: Some(ai_recommendations),
         summary,
+        security_analysis: Some(security_analysis),
     };
     
     match db.save_scan_result(&final_result).await {
@@ -257,6 +290,7 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
 
 fn get_api_patterns() -> Vec<ApiPattern> {
     vec![
+        // AWS Keys
         ApiPattern {
             name: "AWS Access Key".to_string(),
             pattern: Regex::new(r"AKIA[0-9A-Z]{16}").unwrap(),
@@ -265,6 +299,22 @@ fn get_api_patterns() -> Vec<ApiPattern> {
             provider: "AWS".to_string(),
         },
         ApiPattern {
+            name: "AWS Secret Key".to_string(),
+            pattern: Regex::new(r"[0-9a-zA-Z/+]{40}").unwrap(),
+            severity: "critical".to_string(),
+            description: "AWS secret access key detected".to_string(),
+            provider: "AWS".to_string(),
+        },
+        ApiPattern {
+            name: "AWS Session Token".to_string(),
+            pattern: Regex::new(r"AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT\+rJrR").unwrap(),
+            severity: "high".to_string(),
+            description: "AWS session token detected".to_string(),
+            provider: "AWS".to_string(),
+        },
+        
+        // GitHub Keys
+        ApiPattern {
             name: "GitHub Token".to_string(),
             pattern: Regex::new(r"ghp_[a-zA-Z0-9]{36}").unwrap(),
             severity: "high".to_string(),
@@ -272,25 +322,147 @@ fn get_api_patterns() -> Vec<ApiPattern> {
             provider: "GitHub".to_string(),
         },
         ApiPattern {
+            name: "GitHub OAuth Token".to_string(),
+            pattern: Regex::new(r"gho_[a-zA-Z0-9]{36}").unwrap(),
+            severity: "high".to_string(),
+            description: "GitHub OAuth token detected".to_string(),
+            provider: "GitHub".to_string(),
+        },
+        ApiPattern {
+            name: "GitHub App Token".to_string(),
+            pattern: Regex::new(r"(ghu|ghs)_[a-zA-Z0-9]{36}").unwrap(),
+            severity: "high".to_string(),
+            description: "GitHub app token detected".to_string(),
+            provider: "GitHub".to_string(),
+        },
+        
+        // OpenAI Keys
+        ApiPattern {
             name: "OpenAI API Key".to_string(),
-            pattern: Regex::new(r"sk-[a-zA-Z0-9]{48}").unwrap(),
+            pattern: Regex::new(r"sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20}").unwrap(),
             severity: "high".to_string(),
             description: "OpenAI API key detected".to_string(),
             provider: "OpenAI".to_string(),
         },
+        
+        // Stripe Keys
         ApiPattern {
             name: "Stripe Secret Key".to_string(),
-            pattern: Regex::new(r"sk_live_[0-9a-zA-Z]{24}").unwrap(),
+            pattern: Regex::new(r"sk_(test|live)_[0-9a-zA-Z]{24}").unwrap(),
             severity: "critical".to_string(),
             description: "Stripe secret API key detected".to_string(),
             provider: "Stripe".to_string(),
         },
+        ApiPattern {
+            name: "Stripe Publishable Key".to_string(),
+            pattern: Regex::new(r"pk_(test|live)_[0-9a-zA-Z]{24}").unwrap(),
+            severity: "medium".to_string(),
+            description: "Stripe publishable key detected".to_string(),
+            provider: "Stripe".to_string(),
+        },
+        
+        // Google Cloud Keys
         ApiPattern {
             name: "Google Cloud API Key".to_string(),
             pattern: Regex::new(r"AIza[0-9A-Za-z-_]{35}").unwrap(),
             severity: "high".to_string(),
             description: "Google Cloud Platform API key detected".to_string(),
             provider: "Google Cloud".to_string(),
+        },
+        ApiPattern {
+            name: "Google OAuth Key".to_string(),
+            pattern: Regex::new(r"ya29\.[0-9A-Za-z\-_]+").unwrap(),
+            severity: "high".to_string(),
+            description: "Google OAuth access token detected".to_string(),
+            provider: "Google".to_string(),
+        },
+        
+        // Azure Keys
+        ApiPattern {
+            name: "Azure Subscription Key".to_string(),
+            pattern: Regex::new(r"[0-9a-f]{32}").unwrap(),
+            severity: "high".to_string(),
+            description: "Microsoft Azure subscription key detected".to_string(),
+            provider: "Microsoft Azure".to_string(),
+        },
+        
+        // Slack Keys
+        ApiPattern {
+            name: "Slack Bot Token".to_string(),
+            pattern: Regex::new(r"xoxb-[0-9]{11}-[0-9]{11}-[0-9a-zA-Z]{24}").unwrap(),
+            severity: "high".to_string(),
+            description: "Slack bot token detected".to_string(),
+            provider: "Slack".to_string(),
+        },
+        ApiPattern {
+            name: "Slack Webhook".to_string(),
+            pattern: Regex::new(r"https://hooks\.slack\.com/services/[A-Z0-9]{9}/[A-Z0-9]{9}/[a-zA-Z0-9]{24}").unwrap(),
+            severity: "medium".to_string(),
+            description: "Slack webhook URL detected".to_string(),
+            provider: "Slack".to_string(),
+        },
+        
+        // Discord Keys
+        ApiPattern {
+            name: "Discord Bot Token".to_string(),
+            pattern: Regex::new(r"[MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}").unwrap(),
+            severity: "high".to_string(),
+            description: "Discord bot token detected".to_string(),
+            provider: "Discord".to_string(),
+        },
+        
+        // Twilio Keys
+        ApiPattern {
+            name: "Twilio API Key".to_string(),
+            pattern: Regex::new(r"SK[a-z0-9]{32}").unwrap(),
+            severity: "high".to_string(),
+            description: "Twilio API key detected".to_string(),
+            provider: "Twilio".to_string(),
+        },
+        
+        // SendGrid Keys
+        ApiPattern {
+            name: "SendGrid API Key".to_string(),
+            pattern: Regex::new(r"SG\.[a-zA-Z0-9_\-]{22}\.[a-zA-Z0-9_\-]{43}").unwrap(),
+            severity: "high".to_string(),
+            description: "SendGrid API key detected".to_string(),
+            provider: "SendGrid".to_string(),
+        },
+        
+        // Mailgun Keys
+        ApiPattern {
+            name: "Mailgun API Key".to_string(),
+            pattern: Regex::new(r"key-[a-zA-Z0-9]{32}").unwrap(),
+            severity: "high".to_string(),
+            description: "Mailgun API key detected".to_string(),
+            provider: "Mailgun".to_string(),
+        },
+        
+        // Generic JWT Tokens
+        ApiPattern {
+            name: "JWT Token".to_string(),
+            pattern: Regex::new(r"eyJ[a-zA-Z0-9_\-]*\.eyJ[a-zA-Z0-9_\-]*\.[a-zA-Z0-9_\-]*").unwrap(),
+            severity: "medium".to_string(),
+            description: "JSON Web Token detected".to_string(),
+            provider: "Generic".to_string(),
+        },
+        
+        // Database Connection Strings
+        ApiPattern {
+            name: "Database Connection String".to_string(),
+            pattern: Regex::new(r"(mongodb|mysql|postgresql|postgres)://[^\s]+").unwrap(),
+            severity: "critical".to_string(),
+            description: "Database connection string detected".to_string(),
+            provider: "Database".to_string(),
+        },
+        
+        // Private Keys
+        ApiPattern {
+            name: "Private Key".to_string(),
+            pattern: Regex::new(r"-----BEGIN (RSA )?PRIVATE KEY-----").unwrap(),
+            severity: "critical".to_string(),
+            description: "Private key detected".to_string(),
+            provider: "Cryptography".to_string(),
         },
     ]
 }
@@ -421,4 +593,159 @@ async fn update_progress(db: &Database, scan_id: &str, message: &str, progress: 
         message: message.to_string(),
     };
     db.update_scan_progress(scan_id, &progress_update).await
+}
+
+fn analyze_security_context(html_content: &str, base_url: &str) -> Result<SecurityAnalysis> {
+    let document = Html::parse_document(html_content);
+    let mut analysis = SecurityAnalysis {
+        frameworks: Vec::new(),
+        security_headers: HashMap::new(),
+        third_party_services: Vec::new(),
+        technologies: Vec::new(),
+        potential_endpoints: Vec::new(),
+        external_resources: Vec::new(),
+        form_actions: Vec::new(),
+        meta_tags: HashMap::new(),
+    };
+
+    // Detect JavaScript frameworks
+    if html_content.contains("React") || html_content.contains("_next") || html_content.contains("__NEXT_DATA__") {
+        analysis.frameworks.push("Next.js/React".to_string());
+    }
+    if html_content.contains("Vue") || html_content.contains("vue.js") {
+        analysis.frameworks.push("Vue.js".to_string());
+    }
+    if html_content.contains("angular") || html_content.contains("ng-") {
+        analysis.frameworks.push("Angular".to_string());
+    }
+    if html_content.contains("svelte") {
+        analysis.frameworks.push("Svelte".to_string());
+    }
+    if html_content.contains("webpack") {
+        analysis.technologies.push("Webpack".to_string());
+    }
+    if html_content.contains("vite") {
+        analysis.technologies.push("Vite".to_string());
+    }
+
+    // Extract meta tags
+    let meta_selector = Selector::parse("meta").unwrap();
+    for element in document.select(&meta_selector) {
+        if let (Some(name), Some(content)) = (element.value().attr("name"), element.value().attr("content")) {
+            analysis.meta_tags.insert(name.to_string(), content.to_string());
+        }
+    }
+
+    // Extract external resources
+    let script_selector = Selector::parse("script[src]").unwrap();
+    for element in document.select(&script_selector) {
+        if let Some(src) = element.value().attr("src") {
+            if !src.starts_with("/") && !src.starts_with(base_url) {
+                analysis.external_resources.push(src.to_string());
+                
+                // Detect third-party services
+                if src.contains("google") {
+                    if !analysis.third_party_services.contains(&"Google Services".to_string()) {
+                        analysis.third_party_services.push("Google Services".to_string());
+                    }
+                }
+                if src.contains("facebook") || src.contains("fb.com") {
+                    if !analysis.third_party_services.contains(&"Facebook".to_string()) {
+                        analysis.third_party_services.push("Facebook".to_string());
+                    }
+                }
+                if src.contains("cloudflare") {
+                    if !analysis.third_party_services.contains(&"Cloudflare".to_string()) {
+                        analysis.third_party_services.push("Cloudflare".to_string());
+                    }
+                }
+                if src.contains("stripe") {
+                    if !analysis.third_party_services.contains(&"Stripe".to_string()) {
+                        analysis.third_party_services.push("Stripe".to_string());
+                    }
+                }
+            }
+        }
+    }
+
+    // Extract CSS external resources
+    let css_selector = Selector::parse("link[rel='stylesheet']").unwrap();
+    for element in document.select(&css_selector) {
+        if let Some(href) = element.value().attr("href") {
+            if !href.starts_with("/") && !href.starts_with(base_url) {
+                analysis.external_resources.push(href.to_string());
+            }
+        }
+    }
+
+    // Extract form actions (potential endpoints)
+    let form_selector = Selector::parse("form[action]").unwrap();
+    for element in document.select(&form_selector) {
+        if let Some(action) = element.value().attr("action") {
+            analysis.form_actions.push(action.to_string());
+            if action.starts_with("/api/") || action.starts_with("api/") {
+                analysis.potential_endpoints.push(action.to_string());
+            }
+        }
+    }
+
+    // Scan for API endpoints in JavaScript content
+    let api_endpoint_patterns = [
+        r"/api/[a-zA-Z0-9_\-/]+",
+        r"https?://[^/]+/api/[a-zA-Z0-9_\-/]+",
+        r"'/(api|v1|v2|v3)/[^']*'",
+        r#""/api/[^"]*""#,
+    ];
+
+    for pattern in &api_endpoint_patterns {
+        if let Ok(regex) = Regex::new(pattern) {
+            for cap in regex.find_iter(html_content) {
+                let endpoint = cap.as_str().trim_matches('"').trim_matches('\'').to_string();
+                if !analysis.potential_endpoints.contains(&endpoint) {
+                    analysis.potential_endpoints.push(endpoint);
+                }
+            }
+        }
+    }
+
+    // Detect technologies from script sources and content
+    if html_content.contains("tailwind") || html_content.contains("tw-") {
+        analysis.technologies.push("Tailwind CSS".to_string());
+    }
+    if html_content.contains("bootstrap") {
+        analysis.technologies.push("Bootstrap".to_string());
+    }
+    if html_content.contains("jquery") {
+        analysis.technologies.push("jQuery".to_string());
+    }
+    if html_content.contains("axios") {
+        analysis.technologies.push("Axios".to_string());
+    }
+    if html_content.contains("fetch(") {
+        analysis.technologies.push("Fetch API".to_string());
+    }
+
+    // Additional security-relevant detections
+    if html_content.contains("gtag") || html_content.contains("google-analytics") {
+        analysis.third_party_services.push("Google Analytics".to_string());
+    }
+    if html_content.contains("hotjar") {
+        analysis.third_party_services.push("Hotjar".to_string());
+    }
+    if html_content.contains("mixpanel") {
+        analysis.third_party_services.push("Mixpanel".to_string());
+    }
+    if html_content.contains("sentry") {
+        analysis.third_party_services.push("Sentry".to_string());
+    }
+
+    println!("🔍 Security Analysis Results:");
+    println!("   📚 Frameworks: {:?}", analysis.frameworks);
+    println!("   🔧 Technologies: {:?}", analysis.technologies);
+    println!("   🌐 Third-party Services: {:?}", analysis.third_party_services);
+    println!("   📡 External Resources: {} found", analysis.external_resources.len());
+    println!("   🎯 Potential API Endpoints: {:?}", analysis.potential_endpoints);
+    println!("   📝 Meta Tags: {} found", analysis.meta_tags.len());
+
+    Ok(analysis)
 }

@@ -84,11 +84,11 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
           <div className="text-center lg:text-left">
             <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               Detect & Fix
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> API Key Leaks </span>
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> API Key Leaks and Security Issues </span>
               Instantly
             </h1>
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-              Professional open-source security scanner that detects exposed API keys across websites. 
+              Professional open-source security scanner that detects exposed API Keys & security issues across websites. 
               Identifies vulnerabilities over 100+ services.
             </p>
             
@@ -121,7 +121,7 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
                   Start Security Scan
                 </CardTitle>
                 <p className="text-gray-600 dark:text-gray-300 mt-2">
-                  Enter any website URL to scan for exposed API keys and security vulnerabilities
+                  Enter any website URL to scan for exposed API Keys & security issues and security vulnerabilities
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">

@@ -59,6 +59,7 @@ impl Database {
                 completed_checks INTEGER DEFAULT 0,
                 ai_recommendations TEXT,
                 summary TEXT,
+                security_analysis TEXT,
                 created_at TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users (id)
             )",
@@ -114,14 +115,17 @@ impl Database {
     pub async fn save_scan_result(&self, result: &ScanResult) -> Result<()> {
         let findings_json = serde_json::to_string(&result.findings)?;
         let summary_json = serde_json::to_string(&result.summary)?;
+        let security_analysis_json = result.security_analysis.as_ref()
+            .map(|sa| serde_json::to_string(sa))
+            .transpose()?;
         let start_time = result.start_time.to_rfc3339();
         let end_time = result.end_time.map(|t| t.to_rfc3339());
         let now = Utc::now().to_rfc3339();
 
         self.conn.execute(
             "INSERT OR REPLACE INTO scans 
-             (id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+             (id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary, security_analysis, created_at) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 result.id.clone(),
                 result.user_id.clone(),
@@ -134,6 +138,7 @@ impl Database {
                 result.completed_checks as i64,
                 result.ai_recommendations.clone(),
                 summary_json,
+                security_analysis_json,
                 now,
             ),
         ).await?;
@@ -143,7 +148,7 @@ impl Database {
 
     pub async fn get_scan_result(&self, scan_id: &str) -> Result<Option<ScanResult>> {
         let mut rows = self.conn.query(
-            "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary 
+            "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary, security_analysis 
              FROM scans WHERE id = ?",
             [scan_id],
         ).await?;
@@ -151,6 +156,9 @@ impl Database {
         if let Some(row) = rows.next().await? {
             let findings: Vec<ApiKeyFinding> = serde_json::from_str(&row.get::<String>(6)?)?;
             let summary = serde_json::from_str(&row.get::<String>(10)?)?;
+            let security_analysis = row.get::<Option<String>>(11)?
+                .map(|s| serde_json::from_str(&s))
+                .transpose()?;
             
             Ok(Some(ScanResult {
                 id: row.get::<String>(0)?,
@@ -164,6 +172,7 @@ impl Database {
                 completed_checks: row.get::<i64>(8)? as u32,
                 ai_recommendations: row.get::<Option<String>>(9)?,
                 summary,
+                security_analysis,
             }))
         } else {
             Ok(None)
@@ -200,7 +209,7 @@ impl Database {
 
     pub async fn get_user_scans(&self, user_id: &str) -> Result<Vec<ScanResult>> {
         let mut rows = self.conn.query(
-            "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary 
+            "SELECT id, user_id, url, status, start_time, end_time, findings, total_checks, completed_checks, ai_recommendations, summary, security_analysis 
              FROM scans WHERE user_id = ? ORDER BY created_at DESC",
             [user_id],
         ).await?;
@@ -209,6 +218,9 @@ impl Database {
         while let Some(row) = rows.next().await? {
             let findings: Vec<ApiKeyFinding> = serde_json::from_str(&row.get::<String>(6)?)?;
             let summary = serde_json::from_str(&row.get::<String>(10)?)?;
+            let security_analysis = row.get::<Option<String>>(11)?
+                .map(|s| serde_json::from_str(&s))
+                .transpose()?;
             
             scans.push(ScanResult {
                 id: row.get::<String>(0)?,
@@ -222,6 +234,7 @@ impl Database {
                 completed_checks: row.get::<i64>(8)? as u32,
                 ai_recommendations: row.get::<Option<String>>(9)?,
                 summary,
+                security_analysis,
             });
         }
 

@@ -66,7 +66,7 @@ const ScanForm = ({ isScanning, setIsScanning }: ScanFormProps) => {
               Start Security Scan
             </CardTitle>
             <p className="text-gray-600 dark:text-gray-300 mt-2">
-              Enter any website URL to scan for exposed API keys and security vulnerabilities
+              Enter any website URL to scan for exposed API Keys & security issues and security vulnerabilities
             </p>
           </CardHeader>
           <CardContent className="space-y-6">

@@ -3,23 +3,30 @@
 
 ## Overview
 
-KeyGuard AI Scan is a comprehensive, open-source security tool that scans websites for exposed API keys and provides AI-powered recommendations with any OpenAI compatible endpoint, for remediation. Built with modern technologies and designed for both developers and security teams, it helps identify and fix API key exposures that could lead to security breaches.
+KeyGuard AI Scan is a comprehensive, open-source security tool that performs deep website security analysis, detecting exposed API keys, security vulnerabilities, and providing AI-powered recommendations with any OpenAI compatible endpoint for remediation. Built with modern technologies and designed for both developers and security teams, it helps identify and fix security exposures, technology stack vulnerabilities, and architectural security issues that could lead to security breaches.
 
 ## 🚀 Features
 
-### 🔍 Comprehensive Scanning
-- **Real-time Website Scanning**: Progressive scan with live updates
-- **Deep Analysis**: Scans HTML, JavaScript, CSS, and network requests
-- **100+ API Key Types**: Detects AWS, Google Cloud, GitHub, Stripe, OpenAI, and many more
-- **Advanced Pattern Matching**: Regex patterns with entropy analysis
+### 🔍 Comprehensive Security Scanning
+- **Real-time Website Scanning**: Progressive scan with live updates and detailed progress tracking
+- **Deep Multi-Layer Analysis**: Scans HTML, JavaScript, CSS, inline scripts, and external resources
+- **100+ API Key Types**: Detects AWS, Google Cloud, GitHub, Stripe, OpenAI, Discord, Slack, and many more
+- **Advanced Pattern Matching**: Regex patterns with entropy analysis and confidence scoring
 - **Context-Aware Detection**: Distinguishes between real keys and test/dummy values
+- **Technology Stack Analysis**: Identifies frameworks (React, Vue, Angular), build tools (Webpack, Vite), and libraries
+- **Third-Party Service Detection**: Discovers integrated services (Google Analytics, Stripe, Sentry, Hotjar)
+- **Security Architecture Assessment**: Analyzes external resources, API endpoints, form actions, and meta tags
+- **Framework-Specific Vulnerabilities**: Tailored security checks based on detected technology stack
 
-### 🤖 AI-Powered Intelligence
-- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware suggestions
-- **Severity Classification**: Automatic risk assessment (Critical, High, Medium, Low)
-- **Actionable Remediation**: Detailed, step-by-step fix instructions
-- **Best Practices**: Security guidelines and prevention tips
-- **Custom Solutions**: Tailored recommendations based on detected frameworks
+### 🤖 AI-Powered Security Intelligence
+- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware security analysis
+- **Comprehensive Security Assessment**: Analyzes technology stack, architecture patterns, and security implementations
+- **Severity Classification**: Automatic risk assessment (Critical, High, Medium, Low) with confidence scoring
+- **Actionable Remediation**: Detailed, step-by-step fix instructions with immediate and long-term actions
+- **Modern Security Best Practices**: 2025 security guidelines including CSP, SRI, HTTPS, secure headers
+- **Framework-Specific Guidance**: Tailored recommendations for React/Next.js, Vue.js, Angular, and static sites
+- **Technology-Aware Analysis**: Custom security advice based on detected frameworks, build tools, and services
+- **Architecture Security Review**: Recommendations for API security, third-party integrations, and data flow
 
 ### 📊 Professional Reporting
 - **Interactive Dashboard**: Visual reporting with findings breakdown
@@ -49,8 +56,10 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that scans websit
 - **Database**: LibSQL for lightweight, fast data storage
 - **Web Framework**: Axum for async HTTP services
 - **Authentication**: JWT with bcrypt password hashing
-- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible)
-- **HTTP Client**: Reqwest for web scraping
+- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible) with enhanced security analysis
+- **HTTP Client**: Reqwest for comprehensive web content analysis
+- **Security Engine**: Advanced pattern matching with entropy analysis and technology detection
+- **Content Parser**: HTML/CSS/JavaScript analysis with framework and library detection
 
 ### Infrastructure
 - **Containerization**: Docker with multi-stage builds
@@ -180,7 +189,17 @@ POST /api/scan
       "medium": 0,
       "low": 0,
       "total": 0
-    }
+    },
+    "security_analysis": {
+      "frameworks": ["React", "Next.js"],
+      "technologies": ["Webpack", "Tailwind CSS"],
+      "third_party_services": ["Google Analytics", "Stripe"],
+      "potential_endpoints": ["/api/users", "/api/auth"],
+      "external_resources": ["https://cdn.example.com/script.js"],
+      "form_actions": ["/api/contact"],
+      "meta_tags": {"viewport": "width=device-width"}
+    },
+    "ai_recommendations": "Comprehensive security analysis..."
   }
 }
 ```
@@ -231,11 +250,19 @@ docker-compose -f docker-compose.prod.yml up -d
 - **User Control**: Clear data retention policies
 - **Anonymization**: No PII stored without consent
 
+### Comprehensive Security Analysis
+- **Multi-Layer Scanning**: Analyzes HTML, JavaScript, CSS, and external resources
+- **Technology Stack Assessment**: Framework and library security evaluation
+- **Third-Party Risk Analysis**: Evaluates security implications of integrated services
+- **Architecture Security Review**: API endpoints, external dependencies, and data flow analysis
+- **Modern Security Standards**: 2025 best practices including CSP, SRI, and secure headers
+
 ### Scanning Ethics
 - **Rate Limiting**: Prevents abuse of target websites
 - **Robots.txt**: Respects website scanning preferences
 - **Legal Compliance**: GDPR, CCPA compliant
 - **Responsible Disclosure**: Security-focused approach
+- **Non-Intrusive Analysis**: Read-only content analysis without active exploitation
 
 ## 🤝 Contributing
 
@@ -286,7 +313,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.1.9 (Latest)
+### v0.2.0 (Latest)
+- **Comprehensive Security Analysis Engine**: Completely redesigned scanning engine to detect not just API keys but comprehensive security vulnerabilities and architectural issues
+- **Technology Stack Detection**: Advanced detection of frameworks (React, Vue, Angular, Next.js), build tools (Webpack, Vite), CSS frameworks (Tailwind, Bootstrap), and JavaScript libraries
+- **Third-Party Service Analysis**: Identifies and analyzes security implications of integrated services (Google Analytics, Stripe, Sentry, Hotjar, Mixpanel, Cloudflare)
+- **Security Architecture Assessment**: Deep analysis of external resources, potential API endpoints, form actions, meta tags, and security headers
+- **Enhanced AI Security Expert**: Upgraded AI system prompt with 2025 modern security best practices including CSP, SRI, HTTPS everywhere, secure headers, and zero-trust architecture
+- **Framework-Specific Security Recommendations**: Tailored security advice based on detected technology stack (React XSS prevention, Vue template injection, Angular sanitization)
+- **Advanced Pattern Matching**: Improved API key detection with 20+ service patterns, entropy analysis, and confidence scoring
+- **Comprehensive Content Analysis**: Enhanced scanning of HTML content, inline scripts, external JavaScript/CSS files with detailed security context
+- **Security Context Extraction**: Intelligent extraction of security-relevant information including potential endpoints, external dependencies, and technology fingerprinting
+- **Professional Security Reporting**: Detailed security analysis reports with technology stack breakdown, vulnerability assessment, and prioritized remediation steps
+
+### v0.1.9
 - **Real Backend Integration**: Replaced all mockup data and frontend scanning with real Rust backend API integration
 - **Enhanced User Experience**: Added Enter key support to both scan forms for faster form submission
 - **Code Cleanup**: Removed unused mockup files (scanner.ts, ai-recommendations.ts, HeroSection.tsx) for cleaner codebase

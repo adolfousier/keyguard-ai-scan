@@ -297,7 +297,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No API Keys Found</h3>
               <p className="text-gray-600 max-w-md mx-auto">
-                Excellent! No exposed API keys were detected during the security scan. 
+                Excellent! No exposed API Keys & security issues were detected during the security scan. 
                 Your website follows good security practices.
               </p>
             </div>

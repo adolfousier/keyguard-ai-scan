@@ -31,7 +31,7 @@ export const ScanProgress = ({ progress }: ScanProgressProps) => {
       <Progress value={progress.progress} className="h-3" />
       
       <div className="text-xs text-gray-500 text-center">
-        Scanning for exposed API keys and security vulnerabilities...
+        Scanning for exposed API Keys & security issues and security vulnerabilities...
       </div>
     </div>
   );
