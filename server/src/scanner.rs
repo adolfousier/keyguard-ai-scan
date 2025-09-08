@@ -307,7 +307,7 @@ fn get_api_patterns() -> Vec<ApiPattern> {
         },
         ApiPattern {
             name: "AWS Session Token".to_string(),
-            pattern: Regex::new(r"AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT\+rJrR").unwrap(),
+            pattern: Regex::new(r"(?i)(?:aws[_\-]?session[_\-]?token|x[_\-]?amz[_\-]?security[_\-]?token)[=:\s]*([A-Za-z0-9+/=]{200,2000})").unwrap(),
             severity: "high".to_string(),
             description: "AWS session token detected".to_string(),
             provider: "AWS".to_string(),
@@ -371,7 +371,7 @@ fn get_api_patterns() -> Vec<ApiPattern> {
         },
         ApiPattern {
             name: "Google OAuth Key".to_string(),
-            pattern: Regex::new(r"ya29\.[0-9A-Za-z\-_]+").unwrap(),
+            pattern: Regex::new(r"ya29\.[0-9A-Za-z\-_]{1,2000}").unwrap(),
             severity: "high".to_string(),
             description: "Google OAuth access token detected".to_string(),
             provider: "Google".to_string(),
@@ -380,7 +380,7 @@ fn get_api_patterns() -> Vec<ApiPattern> {
         // Azure Keys
         ApiPattern {
             name: "Azure Subscription Key".to_string(),
-            pattern: Regex::new(r"[0-9a-f]{32}").unwrap(),
+            pattern: Regex::new(r"(?i)(?:azure[_\-]?(?:subscription[_\-]?)?key|ocp[_\-]?apim[_\-]?subscription[_\-]?key)[=:\s]*([0-9a-f]{32})").unwrap(),
             severity: "high".to_string(),
             description: "Microsoft Azure subscription key detected".to_string(),
             provider: "Microsoft Azure".to_string(),
@@ -405,7 +405,7 @@ fn get_api_patterns() -> Vec<ApiPattern> {
         // Discord Keys
         ApiPattern {
             name: "Discord Bot Token".to_string(),
-            pattern: Regex::new(r"[MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}").unwrap(),
+            pattern: Regex::new(r"(?i)(?:discord[_\-]?(?:bot[_\-]?)?token)[=:\s]*([MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27})").unwrap(),
             severity: "high".to_string(),
             description: "Discord bot token detected".to_string(),
             provider: "Discord".to_string(),
