@@ -87,6 +87,7 @@ impl AIService {
                 Message {
                     role: "system".to_string(),
                     content: "You are a cybersecurity expert specializing in comprehensive web application security analysis. You analyze websites for API key leaks, security vulnerabilities, and provide actionable recommendations based on detected technologies, frameworks, and security patterns.
+                    Be careful with API Keys false positives such as '.js' or just numberic with non numberic numbers, you should detect any anomalies from the initial scan.
 
                     ## Analysis Focus Areas
 

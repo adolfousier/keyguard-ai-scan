@@ -300,7 +300,7 @@ fn get_api_patterns() -> Vec<ApiPattern> {
         },
         ApiPattern {
             name: "AWS Secret Key".to_string(),
-            pattern: Regex::new(r"[0-9a-zA-Z/+]{40}").unwrap(),
+            pattern: Regex::new(r"(?i)(?:aws[_\-]?secret|secret[_\-]?access[_\-]?key)[=:\s]*([a-zA-Z0-9+/]{40})").unwrap(),
             severity: "critical".to_string(),
             description: "AWS secret access key detected".to_string(),
             provider: "AWS".to_string(),
