@@ -36,7 +36,7 @@ export const AIRecommendations = ({ recommendations, hasFindings = false }: AIRe
             </div>
             <div>
               <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
-                AI Security Analysis
+                AI Security Audit
               </CardTitle>
               <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                 {hasFindings ? 'Vulnerability Assessment & Remediation' : 'Security Best Practices Review'}

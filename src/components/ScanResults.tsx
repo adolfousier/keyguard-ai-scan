@@ -135,7 +135,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                 className="w-full"
                 variant={showRecommendations ? "outline" : "default"}
               >
-                {showRecommendations ? 'Hide' : 'View'} AI Security Analysis
+                {showRecommendations ? 'Hide' : 'View'} AI Security Audit
               </Button>
             </div>
           )}
@@ -147,7 +147,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                 className="w-full"
                 variant={showRecommendations ? "outline" : "default"}
               >
-                {showRecommendations ? 'Hide' : 'View'} AI Security Analysis
+                {showRecommendations ? 'Hide' : 'View'} AI Security Audit
               </Button>
             </div>
           )}
@@ -204,7 +204,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                 <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
                   <Brain className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">AI Security Analysis</h3>
+                <h3 className="text-lg font-semibold text-gray-900">AI Security Audit</h3>
                 <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                   Powered by AI
                 </Badge>
@@ -271,7 +271,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                 <div className="mt-6 flex items-center justify-between pt-4 border-t border-purple-200">
                   <div className="flex items-center space-x-2 text-sm text-purple-600">
                     <Brain className="h-4 w-4" />
-                    <span>AI-powered security analysis</span>
+                    <span>AI-powered security audit</span>
                   </div>
                   <Button 
                     variant="outline" 

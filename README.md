@@ -3,7 +3,7 @@
 
 ## Overview
 
-KeyGuard AI Scan is a comprehensive, open-source security tool that performs deep website security analysis, detecting exposed API keys, security vulnerabilities, and providing AI-powered recommendations with any OpenAI compatible endpoint for remediation. Built with modern technologies and designed for both developers and security teams, it helps identify and fix security exposures, technology stack vulnerabilities, and architectural security issues that could lead to security breaches.
+KeyGuard AI Scan is a comprehensive, open-source security tool that performs deep website secutity audit, detecting exposed API keys, security vulnerabilities, and providing AI-powered recommendations with any OpenAI compatible endpoint for remediation. Built with modern technologies and designed for both developers and security teams, it helps identify and fix security exposures, technology stack vulnerabilities, and architectural security issues that could lead to security breaches.
 
 ## 🚀 Features
 
@@ -19,7 +19,7 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that performs dee
 - **Framework-Specific Vulnerabilities**: Tailored security checks based on detected technology stack
 
 ### 🤖 AI-Powered Security Intelligence
-- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware security analysis
+- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware secutity audit
 - **Comprehensive Security Assessment**: Analyzes technology stack, architecture patterns, and security implementations
 - **Severity Classification**: Automatic risk assessment (Critical, High, Medium, Low) with confidence scoring
 - **Actionable Remediation**: Detailed, step-by-step fix instructions with immediate and long-term actions
@@ -56,7 +56,7 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that performs dee
 - **Database**: LibSQL for lightweight, fast data storage
 - **Web Framework**: Axum for async HTTP services
 - **Authentication**: JWT with bcrypt password hashing
-- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible) with enhanced security analysis
+- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible) with enhanced secutity audit
 - **HTTP Client**: Reqwest for comprehensive web content analysis
 - **Security Engine**: Advanced pattern matching with entropy analysis and technology detection
 - **Content Parser**: HTML/CSS/JavaScript analysis with framework and library detection
@@ -199,7 +199,7 @@ POST /api/scan
       "form_actions": ["/api/contact"],
       "meta_tags": {"viewport": "width=device-width"}
     },
-    "ai_recommendations": "Comprehensive security analysis..."
+    "ai_recommendations": "Comprehensive secutity audit..."
   }
 }
 ```
@@ -250,7 +250,7 @@ docker-compose -f docker-compose.prod.yml up -d
 - **User Control**: Clear data retention policies
 - **Anonymization**: No PII stored without consent
 
-### Comprehensive Security Analysis
+### Comprehensive Secutity Audit
 - **Multi-Layer Scanning**: Analyzes HTML, JavaScript, CSS, and external resources
 - **Technology Stack Assessment**: Framework and library security evaluation
 - **Third-Party Risk Analysis**: Evaluates security implications of integrated services
@@ -314,7 +314,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📝 Changelog
 
 ### v0.2.0 (Latest)
-- **Comprehensive Security Analysis Engine**: Completely redesigned scanning engine to detect not just API keys but comprehensive security vulnerabilities and architectural issues
+- **Comprehensive Secutity Audit Engine**: Completely redesigned scanning engine to detect not just API keys but comprehensive security vulnerabilities and architectural issues
 - **Technology Stack Detection**: Advanced detection of frameworks (React, Vue, Angular, Next.js), build tools (Webpack, Vite), CSS frameworks (Tailwind, Bootstrap), and JavaScript libraries
 - **Third-Party Service Analysis**: Identifies and analyzes security implications of integrated services (Google Analytics, Stripe, Sentry, Hotjar, Mixpanel, Cloudflare)
 - **Security Architecture Assessment**: Deep analysis of external resources, potential API endpoints, form actions, meta tags, and security headers
@@ -323,7 +323,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Advanced Pattern Matching**: Improved API key detection with 20+ service patterns, entropy analysis, and confidence scoring
 - **Comprehensive Content Analysis**: Enhanced scanning of HTML content, inline scripts, external JavaScript/CSS files with detailed security context
 - **Security Context Extraction**: Intelligent extraction of security-relevant information including potential endpoints, external dependencies, and technology fingerprinting
-- **Professional Security Reporting**: Detailed security analysis reports with technology stack breakdown, vulnerability assessment, and prioritized remediation steps
+- **Professional Security Reporting**: Detailed secutity audit reports with technology stack breakdown, vulnerability assessment, and prioritized remediation steps
 
 ### v0.1.9
 - **Real Backend Integration**: Replaced all mockup data and frontend scanning with real Rust backend API integration
@@ -347,7 +347,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Professional Share & Export System**: Implemented comprehensive modular sharing and export functionality
 - **Advanced Export Formats**: Added Markdown, JSON, and CSV export options with branded professional reports
 - **Smart Social Sharing**: Integrated Twitter/X, LinkedIn, Facebook sharing with branded previews and security status
-- **Dark Mode Optimization**: Fixed AI Security Analysis white background issues for complete dark mode compatibility
+- **Dark Mode Optimization**: Fixed AI Secutity Audit white background issues for complete dark mode compatibility
 - **Docker Networking Fixes**: Resolved production deployment networking issues between frontend and backend containers
 - **Enhanced Reporting**: Comprehensive markdown reports with executive summaries, findings breakdowns, and AI recommendations
 - **Clipboard Integration**: One-click URL copying with native device sharing support

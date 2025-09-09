@@ -59,7 +59,7 @@ impl AIService {
             println!("📋 No findings detected, calling AI for clean report: {}", url);
             if let Some(content) = content_summary {
                 format!(
-                    "Analyze this website for security vulnerabilities:\n\n{}\n\nNo API keys found. Provide security analysis and recommendations.",
+                    "Analyze this website for security vulnerabilities:\n\n{}\n\nNo API keys found. Provide secutity audit and recommendations.",
                     content
                 )
             } else {
@@ -86,7 +86,7 @@ impl AIService {
             messages: vec![
                 Message {
                     role: "system".to_string(),
-                    content: "You are a cybersecurity expert specializing in comprehensive web application security analysis. You analyze websites for API key leaks, security vulnerabilities, and provide actionable recommendations based on detected technologies, frameworks, and security patterns.
+                    content: "You are a cybersecurity expert specializing in comprehensive web application security audit. You analyze websites for API key leaks, security vulnerabilities, and provide actionable recommendations based on detected technologies, frameworks, and security patterns.
                     Be careful with API Keys false positives such as '.js' or just numberic with non numberic numbers, you should detect any anomalies from the initial scan.
 
                     ## Analysis Focus Areas
@@ -108,7 +108,7 @@ impl AIService {
                     - API endpoint exposure through frontend code
                     - External resource loading security implications
                     - Form security and CSRF protection
-                    - Meta tag security analysis
+                    - Meta tag secutity audit
 
                     ### 4. Modern Security Best Practices (2025)
                     - **Content Security Policy (CSP)**: Implement strict CSP headers to prevent XSS
@@ -224,7 +224,7 @@ impl AIService {
         
         if content.is_empty() {
             println!("⚠️ No content extracted from streaming response");
-            Ok("# Security Analysis\n\nThe AI service returned an empty response. This could indicate:\n\n1. **API Configuration Issue** - Check your NEURA_ROUTER API key and model settings\n2. **Rate Limiting** - The service may be temporarily unavailable\n3. **Model Issue** - The selected model may not be responding properly\n\n## Recommendations\n\n- Verify your API credentials\n- Try again in a few minutes\n- Check the service status".to_string())
+            Ok("# Security Audit\n\nThe AI service returned an empty response. This could indicate:\n\n1. **API Configuration Issue** - Check your NEURA_ROUTER API key and model settings\n2. **Rate Limiting** - The service may be temporarily unavailable\n3. **Model Issue** - The selected model may not be responding properly\n\n## Recommendations\n\n- Verify your API credentials\n- Try again in a few minutes\n- Check the service status".to_string())
         } else {
             println!("✅ Successfully parsed streaming response, content length: {}", content.len());
             Ok(content)
@@ -244,7 +244,7 @@ impl AIService {
         };
         
         format!(
-            "Security Scan Results for: {}\n\n\
+            "Security Audit Scan Results for: {}\n\n\
             exposed API Keys & security issues Found:\n{}{}\n\n\
             Please provide:\n\
             1. Immediate remediation steps for each finding\n\
@@ -339,7 +339,7 @@ impl AIService {
 
     fn generate_no_findings_response(&self, url: &str) -> String {
         format!(
-            "# ✅ Security Scan Results for {}\n\n\
+            "# ✅ Security Audit Scan Results for {}\n\n\
             ## Excellent News!\n\n\
             No exposed API Keys & security issues were detected during the scan. Your website appears to follow \n\
             good security practices for API key management.\n\n\

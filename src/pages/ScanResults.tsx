@@ -90,11 +90,37 @@ const ScanResultsPage = () => {
   }, [scanId, navigate]);
 
   const copyAIResponse = () => {
-    if (result?.aiRecommendations) {
-      navigator.clipboard.writeText(result.aiRecommendations);
+    if (result) {
+      let content = '';
+      
+      // Add AI recommendations if available
+      if (result.aiRecommendations) {
+        content += `# AI Security Audit\n\n${result.aiRecommendations}\n\n`;
+      }
+      
+      // Add security findings
+      content += `# Security Findings\n\n`;
+      if (result.findings.length === 0) {
+        content += 'No security issues found. Excellent!';
+      } else {
+        result.findings.forEach((finding, index) => {
+          content += `## Finding ${index + 1}: ${finding.type}\n`;
+          content += `**Severity:** ${finding.severity.toUpperCase()}\n`;
+          content += `**Description:** ${finding.description}\n`;
+          content += `**Location:** ${finding.location}${finding.lineNumber ? ` (Line ${finding.lineNumber})` : ''}\n`;
+          content += `**Detected Value:** \`${finding.value}\`\n`;
+          content += `**Context:** \`${finding.context}\`\n`;
+          if (finding.recommendation) {
+            content += `**Recommendation:** ${finding.recommendation}\n`;
+          }
+          content += `**Confidence:** ${finding.confidence}%\n\n`;
+        });
+      }
+      
+      navigator.clipboard.writeText(content);
       toast({
         title: "Copied!",
-        description: "AI analysis copied to clipboard",
+        description: "Complete security analysis copied to clipboard",
       });
     }
   };
@@ -196,7 +222,7 @@ const ScanResultsPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
               <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              <span>Security Scan Results</span>
+              <span>Security Audit Scan Results</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -245,14 +271,14 @@ const ScanResultsPage = () => {
                   <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 dark:from-purple-400 dark:to-blue-400 rounded-lg">
                     <Brain className="h-5 w-5 text-white" />
                   </div>
-                  <span>AI Security Analysis</span>
+                  <span>AI Security Audit</span>
                   <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 dark:from-purple-400 dark:to-blue-400 text-white">
                     Powered by AI
                   </Badge>
                 </CardTitle>
                 <Button variant="outline" size="sm" onClick={copyAIResponse}>
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy Analysis
+                  Copy Full Report
                 </Button>
               </div>
             </CardHeader>

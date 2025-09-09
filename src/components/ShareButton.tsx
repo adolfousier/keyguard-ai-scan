@@ -31,7 +31,7 @@ export const ShareButton = ({ result, size = "sm", variant = "outline" }: ShareB
   const [copied, setCopied] = useState(false);
 
   const shareUrl = `${window.location.origin}/scan-results?id=${result.id}`;
-  const shareTitle = `Security Scan Results for ${result.url}`;
+  const shareTitle = `Security Audit Scan Results for ${result.url}`;
   const shareDescription = `Found ${result.summary.total} security findings. ${
     result.summary.total === 0 
       ? "✅ No vulnerabilities detected!" 
@@ -122,7 +122,7 @@ export const ShareButton = ({ result, size = "sm", variant = "outline" }: ShareB
         <div className="px-2 py-2 border-b">
           <p className="text-sm font-medium text-gray-900 dark:text-white">Share Scan Results</p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            Share this security analysis with others
+            Share this security audit with others
           </p>
         </div>
 

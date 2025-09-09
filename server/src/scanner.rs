@@ -142,9 +142,9 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     
     update_progress(&db, &scan_id, "Analyzing HTML content", 30).await?;
     
-    // Perform comprehensive security analysis
+    // Perform comprehensive secutity audit
     let security_analysis = analyze_security_context(&html_content, &request.url)?;
-    println!("🔒 Security analysis completed: {} frameworks, {} technologies, {} services detected", 
+    println!("🔒 Security audit completed: {} frameworks, {} technologies, {} services detected", 
              security_analysis.frameworks.len(), security_analysis.technologies.len(), security_analysis.third_party_services.len());
     
     // Parse HTML and extract URLs synchronously
@@ -218,10 +218,10 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     update_progress(&db, &scan_id, "Generating AI recommendations", 90).await?;
     println!("🤖 Total findings before AI analysis: {}", findings.len());
     
-    // Generate AI recommendations with comprehensive security analysis
+    // Generate AI recommendations with comprehensive secutity audit
     let ai_service = AIService::new();
     let content_summary = format!(
-        "Website: {}\n\n## Comprehensive Security Analysis\n\n### Content Analysis\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\n### Technology Stack Detected\n- Frameworks: {}\n- Technologies: {}\n- Third-party Services: {}\n\n### Security-Relevant Findings\n- External Resources: {} detected\n- Potential API Endpoints: {}\n- Form Actions: {}\n- Meta Tags: {} analyzed\n\n### Sample Code Analysis\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\n### Security Scan Results\n- API Key Findings: {} issues detected\n- Pattern Matches: {} total patterns scanned\n\n### Detailed Security Context\n- Detected Frameworks: {:?}\n- Detected Technologies: {:?}\n- Third-party Services: {:?}\n- External Resources: {:?}\n- Potential API Endpoints: {:?}",
+        "Website: {}\n\n## Comprehensive Secutity Audit\n\n### Content Analysis\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\n### Technology Stack Detected\n- Frameworks: {}\n- Technologies: {}\n- Third-party Services: {}\n\n### Security-Relevant Findings\n- External Resources: {} detected\n- Potential API Endpoints: {}\n- Form Actions: {}\n- Meta Tags: {} analyzed\n\n### Sample Code Analysis\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\n### Security Audit Scan Results\n- API Key Findings: {} issues detected\n- Pattern Matches: {} total patterns scanned\n\n### Detailed Security Context\n- Detected Frameworks: {:?}\n- Detected Technologies: {:?}\n- Third-party Services: {:?}\n- External Resources: {:?}\n- Potential API Endpoints: {:?}",
         request.url,
         html_content.len(),
         script_urls.len(),
@@ -739,7 +739,7 @@ fn analyze_security_context(html_content: &str, base_url: &str) -> Result<Securi
         analysis.third_party_services.push("Sentry".to_string());
     }
 
-    println!("🔍 Security Analysis Results:");
+    println!("🔍 Secutity Audit Results:");
     println!("   📚 Frameworks: {:?}", analysis.frameworks);
     println!("   🔧 Technologies: {:?}", analysis.technologies);
     println!("   🌐 Third-party Services: {:?}", analysis.third_party_services);

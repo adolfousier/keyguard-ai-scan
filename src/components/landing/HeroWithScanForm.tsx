@@ -118,7 +118,7 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
               <CardHeader className="text-center pb-6">
                 <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
                   <Search className="h-6 w-6 mr-2 text-blue-600" />
-                  Start Security Scan
+                  Start Security Audit Scan
                 </CardTitle>
                 <p className="text-gray-600 dark:text-gray-300 mt-2">
                   Enter any website URL to scan for exposed API Keys & security issues and security vulnerabilities
@@ -164,7 +164,7 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
                   ) : (
                     <>
                       <Search className="h-5 w-5 mr-2" />
-                      Start Free Security Scan
+                      Start Free Security Audit Scan
                     </>
                   )}
                 </Button>
