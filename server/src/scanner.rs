@@ -10,6 +10,7 @@ use std::collections::HashMap;
 
 use crate::database::Database;
 use crate::ai_service::AIService;
+use crate::security_tests::{perform_active_security_tests, calculate_security_score, check_compliance_status, VulnerabilityTest};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ScanRequest {
@@ -73,7 +74,12 @@ pub struct SecurityAnalysis {
     pub external_resources: Vec<String>,
     pub form_actions: Vec<String>,
     pub meta_tags: HashMap<String, String>,
+    pub vulnerability_tests: Vec<VulnerabilityTest>,
+    pub security_score: u32,
+    pub compliance_status: HashMap<String, String>,
 }
+
+
 
 #[derive(Debug)]
 struct ApiPattern {
@@ -143,9 +149,27 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     update_progress(&db, &scan_id, "Analyzing HTML content", 30).await?;
     
     // Perform comprehensive secutity audit
-    let security_analysis = analyze_security_context(&html_content, &request.url)?;
+    let mut security_analysis = analyze_security_context(&html_content, &request.url)?;
     println!("🔒 Security audit completed: {} frameworks, {} technologies, {} services detected", 
              security_analysis.frameworks.len(), security_analysis.technologies.len(), security_analysis.third_party_services.len());
+    
+    update_progress(&db, &scan_id, "Running active security tests", 40).await?;
+    
+    // Perform active security testing
+    let vulnerability_tests = perform_active_security_tests(&client, &request.url).await?;
+    security_analysis.vulnerability_tests = vulnerability_tests;
+    
+    println!("🛡️ Active security tests completed: {} tests run", 
+             security_analysis.vulnerability_tests.len());
+    
+    let mut findings = Vec::new();
+    let mut total_checks = 0;
+    
+    // Scan HTML content
+    total_checks += 1;
+    let html_findings = scan_text_content(&html_content, "HTML", &patterns);
+    println!("🔍 HTML scan found {} potential issues", html_findings.len());
+    findings.extend(html_findings);
     
     // Parse HTML and extract URLs synchronously
     let (script_urls, inline_scripts, css_urls) = {
@@ -174,16 +198,7 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         (script_urls, inline_scripts, css_urls)
     }; // document is dropped here
     
-    let mut findings = Vec::new();
-    let mut total_checks = 0;
-    
-    // Scan HTML content
-    total_checks += 1;
-    let html_findings = scan_text_content(&html_content, "HTML", &patterns);
-    println!("🔍 HTML scan found {} potential issues", html_findings.len());
-    findings.extend(html_findings);
-    
-    update_progress(&db, &scan_id, "Scanning JavaScript files", 50).await?;
+    update_progress(&db, &scan_id, "Scanning JavaScript files", 60).await?;
     
     // Scan external JavaScript files
     for script_url in &script_urls {
@@ -202,7 +217,7 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         findings.extend(scan_text_content(script_content, "Inline JavaScript", &patterns));
     }
     
-    update_progress(&db, &scan_id, "Scanning CSS files", 70).await?;
+    update_progress(&db, &scan_id, "Scanning CSS files", 80).await?;
     
     // Scan CSS files
     for css_url in &css_urls {
@@ -215,13 +230,29 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         }
     }
     
+    // Calculate security score
+    security_analysis.security_score = calculate_security_score(&security_analysis.vulnerability_tests, &findings);
+    
+    // Check compliance status
+    security_analysis.compliance_status = check_compliance_status(&security_analysis.security_headers, &security_analysis.vulnerability_tests);
+    
     update_progress(&db, &scan_id, "Generating AI recommendations", 90).await?;
     println!("🤖 Total findings before AI analysis: {}", findings.len());
     
     // Generate AI recommendations with comprehensive secutity audit
     let ai_service = AIService::new();
+    // Prepare vulnerability test summary
+    let vulnerability_summary = security_analysis.vulnerability_tests.iter()
+        .map(|test| format!("- {}: {} ({})", test.test_name, test.status, test.severity))
+        .collect::<Vec<_>>()
+        .join("\n");
+    
+    let failed_tests = security_analysis.vulnerability_tests.iter()
+        .filter(|test| test.status == "fail")
+        .collect::<Vec<_>>();
+    
     let content_summary = format!(
-        "Website: {}\n\n## Comprehensive Secutity Audit\n\n### Content Analysis\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\n### Technology Stack Detected\n- Frameworks: {}\n- Technologies: {}\n- Third-party Services: {}\n\n### Security-Relevant Findings\n- External Resources: {} detected\n- Potential API Endpoints: {}\n- Form Actions: {}\n- Meta Tags: {} analyzed\n\n### Sample Code Analysis\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\n### Security Audit Scan Results\n- API Key Findings: {} issues detected\n- Pattern Matches: {} total patterns scanned\n\n### Detailed Security Context\n- Detected Frameworks: {:?}\n- Detected Technologies: {:?}\n- Third-party Services: {:?}\n- External Resources: {:?}\n- Potential API Endpoints: {:?}",
+        "Website: {}\n\n## Comprehensive Security Audit Report\n\n### Content Analysis\n- HTML: {} bytes\n- JavaScript files: {}\n- CSS files: {}\n- Inline scripts: {}\n\n### Technology Stack Detected\n- Frameworks: {}\n- Technologies: {}\n- Third-party Services: {}\n\n### Active Security Testing Results\n- Total Tests Run: {}\n- Failed Tests: {}\n- Security Score: {}/100\n- Compliance Status: {:?}\n\n### Vulnerability Test Results\n{}\n\n### Failed Security Tests (Require Attention)\n{}\n\n### Detailed Vulnerability Test Results\n{}\n\n### Security-Relevant Findings\n- External Resources: {} detected\n- Potential API Endpoints: {}\n- Form Actions: {}\n- Meta Tags: {} analyzed\n\n### Sample Code Analysis\n\nHTML snippet:\n{}\n\nJavaScript snippet:\n{}\n\n### API Key Scan Results\n- API Key Findings: {} issues detected\n- Pattern Matches: {} total patterns scanned\n\n### Detailed Security Context\n- Detected Frameworks: {:?}\n- Detected Technologies: {:?}\n- Third-party Services: {:?}\n- External Resources: {:?}\n- Potential API Endpoints: {:?}",
         request.url,
         html_content.len(),
         script_urls.len(),
@@ -230,6 +261,20 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
         if security_analysis.frameworks.is_empty() { "None detected".to_string() } else { security_analysis.frameworks.join(", ") },
         if security_analysis.technologies.is_empty() { "None detected".to_string() } else { security_analysis.technologies.join(", ") },
         if security_analysis.third_party_services.is_empty() { "None detected".to_string() } else { security_analysis.third_party_services.join(", ") },
+        security_analysis.vulnerability_tests.len(),
+        failed_tests.len(),
+        security_analysis.security_score,
+        security_analysis.compliance_status,
+        vulnerability_summary,
+        failed_tests.iter().map(|test| format!("- {}: {} - {}", test.test_name, test.description, test.recommendation)).collect::<Vec<_>>().join("\n"),
+        security_analysis.vulnerability_tests.iter().map(|test| {
+            let details_str = if !test.details.is_empty() {
+                format!(" [Details: {}]", test.details.iter().map(|(k, v)| format!("{}: {}", k, v)).collect::<Vec<_>>().join(", "))
+            } else {
+                String::new()
+            };
+            format!("- {} ({}): {}{}", test.test_name, test.status, test.description, details_str)
+        }).collect::<Vec<_>>().join("\n"),
         security_analysis.external_resources.len(),
         security_analysis.potential_endpoints.len(),
         security_analysis.form_actions.len(),
@@ -595,6 +640,8 @@ async fn update_progress(db: &Database, scan_id: &str, message: &str, progress: 
     db.update_scan_progress(scan_id, &progress_update).await
 }
 
+
+
 fn analyze_security_context(html_content: &str, base_url: &str) -> Result<SecurityAnalysis> {
     let document = Html::parse_document(html_content);
     let mut analysis = SecurityAnalysis {
@@ -606,6 +653,9 @@ fn analyze_security_context(html_content: &str, base_url: &str) -> Result<Securi
         external_resources: Vec::new(),
         form_actions: Vec::new(),
         meta_tags: HashMap::new(),
+        vulnerability_tests: Vec::new(),
+        security_score: 0,
+        compliance_status: HashMap::new(),
     };
 
     // Detect JavaScript frameworks

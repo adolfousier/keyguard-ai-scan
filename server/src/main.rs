@@ -14,6 +14,7 @@ mod scanner;
 mod auth;
 mod ai_service;
 mod utils;
+mod security_tests;
 
 use database::Database;
 use scanner::{ScanRequest, ScanResult, ScanProgress};
@@ -41,6 +42,7 @@ impl<T> ApiResponse<T> {
         }
     }
 
+    #[allow(dead_code)]
     fn error(message: String) -> Self {
         Self {
             success: false,

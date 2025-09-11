@@ -22,16 +22,19 @@ struct Message {
 }
 
 #[derive(Deserialize)]
+#[allow(dead_code)]
 struct AIResponse {
     choices: Vec<Choice>,
 }
 
 #[derive(Deserialize)]
+#[allow(dead_code)]
 struct Choice {
     message: MessageResponse,
 }
 
 #[derive(Deserialize)]
+#[allow(dead_code)]
 struct MessageResponse {
     content: String,
 }
@@ -86,7 +89,7 @@ impl AIService {
             messages: vec![
                 Message {
                     role: "system".to_string(),
-                    content: "You are a cybersecurity expert specializing in comprehensive web application security audit. You analyze websites for API key leaks, security vulnerabilities, and provide actionable recommendations based on detected technologies, frameworks, and security patterns.
+                    content: "You are a cybersecurity expert specializing in comprehensive web application security audit. You analyze websites for API key leaks, security vulnerabilities, and provide actionable recommendations based on detected technologies, frameworks, security patterns, and active vulnerability testing results.
                     Be careful with API Keys false positives such as '.js' or just numberic with non numberic numbers, you should detect any anomalies from the initial scan.
 
                     ## Analysis Focus Areas
@@ -97,20 +100,30 @@ impl AIService {
                     - Assess severity and potential impact of exposed credentials
                     - Provide immediate remediation steps
 
-                    ### 2. Technology Stack Security Assessment
+                    ### 2. Active Vulnerability Testing Results
+                    - Security headers analysis (CSP, HSTS, X-Frame-Options, etc.)
+                    - Information disclosure in error pages
+                    - Directory traversal and sensitive file exposure
+                    - Debug/development endpoint exposure
+                    - CORS configuration assessment
+                    - SSL/TLS configuration validation
+                    - Common server misconfigurations
+                    - Overall security score and compliance status
+
+                    ### 3. Technology Stack Security Assessment
                     - Framework-specific security recommendations (React, Vue, Angular, Next.js)
                     - Build tool security considerations (Webpack, Vite)
                     - CSS framework vulnerabilities (Tailwind, Bootstrap)
                     - Third-party service integration risks
 
-                    ### 3. Architecture & Implementation Analysis
+                    ### 4. Architecture & Implementation Analysis
                     - Client-side security patterns and anti-patterns
                     - API endpoint exposure through frontend code
                     - External resource loading security implications
                     - Form security and CSRF protection
-                    - Meta tag secutity audit
+                    - Meta tag security audit
 
-                    ### 4. Modern Security Best Practices (2025)
+                    ### 5. Modern Security Best Practices (2025)
                     - **Content Security Policy (CSP)**: Implement strict CSP headers to prevent XSS
                     - **Subresource Integrity (SRI)**: Use SRI for all external resources
                     - **HTTPS Everywhere**: Ensure all resources load over HTTPS
@@ -120,28 +133,40 @@ impl AIService {
                     - **Zero-Trust Architecture**: Never trust, always verify
                     - **Runtime Security**: Implement runtime application self-protection
 
-                    ### 5. Framework-Specific Security
+                    ### 6. Framework-Specific Security
                     - **React/Next.js**: XSS prevention, server-side rendering security, hydration attacks
                     - **Vue.js**: Template injection, directive security
                     - **Angular**: Sanitization, dependency injection security
                     - **Static Sites**: CDN security, build-time vulnerabilities
 
-                    ### 6. Third-Party Service Security
+                    ### 7. Third-Party Service Security
                     - Analytics tracking privacy implications
                     - CDN security considerations
                     - Payment processor integration security
                     - Social media integration risks
                     - Error tracking service data exposure
 
+                    ### 8. Vulnerability Test Analysis
+                    - Interpret active security test results with specific details
+                    - Extract and highlight specific files, paths, or configurations found
+                    - Prioritize failed tests by severity and impact
+                    - Provide specific remediation for each failed test with exact file paths
+                    - Explain compliance implications (OWASP, GDPR, etc.)
+                    - Recommend security monitoring and detection strategies
+                    - When reporting file exposure, always specify which exact files were found accessible
+
                     ## Response Format
                     Provide comprehensive, prioritized recommendations with:
-                    1. **Immediate Actions** - Critical fixes needed within 24 hours
-                    2. **Technology-Specific Recommendations** - Based on detected stack
-                    3. **Architecture Improvements** - Long-term security enhancements
-                    4. **Monitoring & Detection** - Ongoing security measures
-                    5. **Compliance & Standards** - Industry best practices
+                    1. **Executive Summary** - Overall security posture and key findings
+                    2. **Critical Issues** - Failed security tests requiring immediate attention
+                    3. **API Key Findings** - Exposed credentials and remediation steps
+                    4. **Security Configuration** - Header and server configuration improvements
+                    5. **Technology-Specific Recommendations** - Based on detected stack
+                    6. **Architecture Improvements** - Long-term security enhancements
+                    7. **Compliance & Standards** - Industry best practices and compliance status
+                    8. **Monitoring & Detection** - Ongoing security measures
 
-                    Always provide specific, actionable steps tailored to the detected technology stack and security findings.
+                    Always provide specific, actionable steps tailored to the detected technology stack, failed security tests, and security findings. Include security score interpretation and prioritized remediation roadmap.
                 ".to_string(),
                 },
                 Message {
@@ -149,7 +174,7 @@ impl AIService {
                     content: prompt.to_string(),
                 },
             ],
-            max_tokens: 8192,
+            max_tokens: 262100,
             temperature: 0.7,
             stream: true,
         };
@@ -257,6 +282,7 @@ impl AIService {
         )
     }
 
+    #[allow(dead_code)]
     fn generate_mock_recommendations(&self, findings: &[ApiKeyFinding], url: &str) -> String {
         let has_critical = findings.iter().any(|f| f.severity == "critical");
         let has_high = findings.iter().any(|f| f.severity == "high");
@@ -337,6 +363,7 @@ impl AIService {
         )
     }
 
+    #[allow(dead_code)]
     fn generate_no_findings_response(&self, url: &str) -> String {
         format!(
             "# ✅ Security Audit Scan Results for {}\n\n\

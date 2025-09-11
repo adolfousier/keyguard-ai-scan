@@ -26,6 +26,7 @@ pub struct Claims {
 #[derive(Clone)]
 pub struct AuthService {
     encoding_key: EncodingKey,
+    #[allow(dead_code)]
     decoding_key: DecodingKey,
 }
 
@@ -83,6 +84,7 @@ impl AuthService {
         Ok(token)
     }
 
+    #[allow(dead_code)]
     pub fn verify_token(&self, token: &str) -> Result<Claims> {
         let token_data = decode::<Claims>(
             token,
