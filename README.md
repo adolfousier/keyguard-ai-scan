@@ -18,22 +18,39 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that performs dee
 - **Security Architecture Assessment**: Analyzes external resources, API endpoints, form actions, and meta tags
 - **Framework-Specific Vulnerabilities**: Tailored security checks based on detected technology stack
 
+### 🛡️ Active Vulnerability Testing
+- **Security Headers Analysis**: Tests for CSP, HSTS, X-Frame-Options, and other critical security headers
+- **Information Disclosure Detection**: Identifies sensitive data exposure in error pages and responses
+- **Directory Traversal Testing**: Safe read-only checks for exposed sensitive files (.env, config files, etc.)
+- **Debug Endpoint Discovery**: Detects publicly accessible development and debug endpoints
+- **CORS Configuration Validation**: Tests Cross-Origin Resource Sharing policies for misconfigurations
+- **SSL/TLS Security Assessment**: Validates HTTPS implementation and HTTP-to-HTTPS redirects
+- **Server Misconfiguration Detection**: Identifies information disclosure through server headers
+- **Security Score Calculation**: Comprehensive scoring system (0-100) based on all security findings
+- **Compliance Status Checking**: OWASP, SSL/TLS, and overall security posture assessment
+
 ### 🤖 AI-Powered Security Intelligence
-- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware secutity audit
+- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware security audit
 - **Comprehensive Security Assessment**: Analyzes technology stack, architecture patterns, and security implementations
+- **Vulnerability Test Analysis**: AI interprets active security test results and prioritizes remediation
 - **Severity Classification**: Automatic risk assessment (Critical, High, Medium, Low) with confidence scoring
 - **Actionable Remediation**: Detailed, step-by-step fix instructions with immediate and long-term actions
 - **Modern Security Best Practices**: 2025 security guidelines including CSP, SRI, HTTPS, secure headers
 - **Framework-Specific Guidance**: Tailored recommendations for React/Next.js, Vue.js, Angular, and static sites
 - **Technology-Aware Analysis**: Custom security advice based on detected frameworks, build tools, and services
 - **Architecture Security Review**: Recommendations for API security, third-party integrations, and data flow
+- **Compliance Guidance**: OWASP, GDPR, and industry standard compliance recommendations
+- **Security Score Interpretation**: Detailed analysis of security posture with prioritized improvement roadmap
 
 ### 📊 Professional Reporting
-- **Interactive Dashboard**: Visual reporting with findings breakdown
-- **Export Options**: PDF, JSON, CSV report generation
-- **Shareable Results**: Secure sharing of scan results
-- **Historical Tracking**: User account with scan history
-- **Real-time Progress**: Live updates during scanning process
+- **Interactive Dashboard**: Visual reporting with findings breakdown and security score display
+- **Comprehensive Security Reports**: Detailed vulnerability test results with pass/fail status
+- **Export Options**: PDF, JSON, CSV report generation with full security analysis
+- **Shareable Results**: Secure sharing of scan results with executive summaries
+- **Historical Tracking**: User account with scan history and security score trends
+- **Real-time Progress**: Live updates during scanning process with active testing phases
+- **Compliance Reporting**: OWASP, SSL/TLS, and security posture compliance status
+- **Executive Summaries**: High-level security overview for management and stakeholders
 
 ### 🔐 Enterprise Security
 - **User Authentication**: JWT-based secure sessions
@@ -60,12 +77,14 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that performs dee
 - **HTTP Client**: Reqwest for comprehensive web content analysis
 - **Security Engine**: Advanced pattern matching with entropy analysis and technology detection
 - **Content Parser**: HTML/CSS/JavaScript analysis with framework and library detection
+- **Vulnerability Testing Engine**: Active security testing with 7+ comprehensive test categories
+- **Security Scoring System**: Automated security posture assessment with compliance checking
 
 ### Infrastructure
 - **Containerization**: Docker with multi-stage builds
 - **Orchestration**: Docker Compose for local development
 - **Ports**: Frontend (11111), Backend (11112)
-- **Database**: In-memory LibSQL (production-ready for scaling)
+- **Database**: Persistent LibSQL with file-based storage (production-ready for scaling)
 
 ## 🚀 Quick Start
 
@@ -197,9 +216,24 @@ POST /api/scan
       "potential_endpoints": ["/api/users", "/api/auth"],
       "external_resources": ["https://cdn.example.com/script.js"],
       "form_actions": ["/api/contact"],
-      "meta_tags": {"viewport": "width=device-width"}
+      "meta_tags": {"viewport": "width=device-width"},
+      "vulnerability_tests": [
+        {
+          "test_name": "CSP Header",
+          "status": "fail",
+          "severity": "medium",
+          "description": "Content Security Policy header missing",
+          "recommendation": "Implement CSP header to prevent XSS attacks"
+        }
+      ],
+      "security_score": 75,
+      "compliance_status": {
+        "OWASP": "Partial",
+        "SSL/TLS": "Good",
+        "Security Posture": "Fair"
+      }
     },
-    "ai_recommendations": "Comprehensive secutity audit..."
+    "ai_recommendations": "Comprehensive security audit with vulnerability analysis..."
   }
 }
 ```
@@ -250,12 +284,15 @@ docker-compose -f docker-compose.prod.yml up -d
 - **User Control**: Clear data retention policies
 - **Anonymization**: No PII stored without consent
 
-### Comprehensive Secutity Audit
+### Comprehensive Security Audit
 - **Multi-Layer Scanning**: Analyzes HTML, JavaScript, CSS, and external resources
+- **Active Vulnerability Testing**: 7+ categories of security tests including headers, CORS, SSL/TLS
 - **Technology Stack Assessment**: Framework and library security evaluation
 - **Third-Party Risk Analysis**: Evaluates security implications of integrated services
 - **Architecture Security Review**: API endpoints, external dependencies, and data flow analysis
 - **Modern Security Standards**: 2025 best practices including CSP, SRI, and secure headers
+- **Security Scoring**: Automated assessment with 0-100 security score and compliance status
+- **Information Disclosure Testing**: Safe detection of sensitive file exposure and debug endpoints
 
 ### Scanning Ethics
 - **Rate Limiting**: Prevents abuse of target websites
@@ -313,7 +350,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
-### v0.2.0 (Latest)
+### v0.2.1 (2025-09-12)
+- **Active Vulnerability Testing Engine**: Comprehensive security testing with 7+ test categories including security headers, information disclosure, directory traversal, debug endpoints, CORS, SSL/TLS, and server misconfigurations
+- **Security Scoring System**: Automated 0-100 security score calculation based on API key findings and vulnerability test results
+- **Compliance Assessment**: OWASP, SSL/TLS, and overall security posture compliance checking with detailed status reporting
+- **Enhanced AI Security Analysis**: Updated AI system to interpret active vulnerability test results and provide prioritized remediation recommendations
+- **Modular Security Testing Architecture**: Organized security tests into dedicated module (security_tests.rs) for maintainability and extensibility
+- **Advanced Security Headers Testing**: Comprehensive analysis of CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy headers
+- **Safe Information Disclosure Detection**: Non-intrusive testing for sensitive data exposure in error pages and debug information
+- **Directory Traversal Protection Validation**: Read-only checks for exposed sensitive files (.env, config.json, .git/config, etc.)
+- **CORS Security Validation**: Preflight request testing to identify overly permissive CORS configurations
+- **SSL/TLS Implementation Assessment**: HTTPS enforcement and HTTP-to-HTTPS redirect validation
+- **Server Fingerprinting Protection**: Detection of information disclosure through server headers and technology stack exposure
+- **Executive Security Reporting**: Enhanced reporting with security scores, compliance status, and prioritized remediation roadmaps
+
+### v0.2.0 (2025-09-11)
 - **Comprehensive Secutity Audit Engine**: Completely redesigned scanning engine to detect not just API keys but comprehensive security vulnerabilities and architectural issues
 - **Technology Stack Detection**: Advanced detection of frameworks (React, Vue, Angular, Next.js), build tools (Webpack, Vite), CSS frameworks (Tailwind, Bootstrap), and JavaScript libraries
 - **Third-Party Service Analysis**: Identifies and analyzes security implications of integrated services (Google Analytics, Stripe, Sentry, Hotjar, Mixpanel, Cloudflare)
@@ -325,7 +376,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Security Context Extraction**: Intelligent extraction of security-relevant information including potential endpoints, external dependencies, and technology fingerprinting
 - **Professional Security Reporting**: Detailed secutity audit reports with technology stack breakdown, vulnerability assessment, and prioritized remediation steps
 
-### v0.1.9
+### v0.1.9 (2025-09-10)
 - **Real Backend Integration**: Replaced all mockup data and frontend scanning with real Rust backend API integration
 - **Enhanced User Experience**: Added Enter key support to both scan forms for faster form submission
 - **Code Cleanup**: Removed unused mockup files (scanner.ts, ai-recommendations.ts, HeroSection.tsx) for cleaner codebase
@@ -335,7 +386,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Error Handling**: Improved error handling with proper user feedback during scan failures
 - **Performance**: Streamlined frontend by removing duplicate components and unused code
 
-### v0.1.8
+### v0.1.8 (2025-09-10)
 - **Persistent Database Storage**: Fixed shared scan result URLs not persisting after app restart by switching from in-memory to file-based database storage
 - **Docker Volume Integration**: Added persistent volume mounting for database files in Docker containers to ensure data survives container restarts
 - **Environment Configuration**: Added DATABASE_PATH environment variable for configurable database file location
@@ -343,7 +394,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Database File Management**: Added database files to .gitignore to prevent committing persistent data
 - **Container Optimization**: Updated Dockerfile to create data directory structure for reliable database storage
 
-### v0.1.7
+### v0.1.7 (2025-09-09)
 - **Professional Share & Export System**: Implemented comprehensive modular sharing and export functionality
 - **Advanced Export Formats**: Added Markdown, JSON, and CSV export options with branded professional reports
 - **Smart Social Sharing**: Integrated Twitter/X, LinkedIn, Facebook sharing with branded previews and security status

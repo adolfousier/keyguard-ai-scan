@@ -335,6 +335,26 @@ const ScanResultsPage = () => {
                       strong: ({node, ...props}) => (
                         <strong className="font-semibold text-gray-900 dark:text-white bg-yellow-100 dark:bg-yellow-900/50 px-1 rounded" {...props} />
                       ),
+                      table: ({node, ...props}) => (
+                        <div className="overflow-x-auto my-4">
+                          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600" {...props} />
+                        </div>
+                      ),
+                      thead: ({node, ...props}) => (
+                        <thead className="bg-gray-100 dark:bg-gray-800" {...props} />
+                      ),
+                      tbody: ({node, ...props}) => (
+                        <tbody {...props} />
+                      ),
+                      tr: ({node, ...props}) => (
+                        <tr className="border-b border-gray-200 dark:border-gray-700" {...props} />
+                      ),
+                      th: ({node, ...props}) => (
+                        <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left font-semibold text-gray-900 dark:text-white" {...props} />
+                      ),
+                      td: ({node, ...props}) => (
+                        <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300" {...props} />
+                      ),
                     }}
                   >
                     {result.aiRecommendations}
