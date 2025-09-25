@@ -3,61 +3,107 @@
 
 ## Overview
 
-KeyGuard AI Scan is a comprehensive, open-source security tool that performs deep website secutity audit, detecting exposed API keys, security vulnerabilities, and providing AI-powered recommendations with any OpenAI compatible endpoint for remediation. Built with modern technologies and designed for both developers and security teams, it helps identify and fix security exposures, technology stack vulnerabilities, and architectural security issues that could lead to security breaches.
+KeyGuard AI Scan is a **comprehensive, automated penetration testing platform** that performs deep web application security assessments, vulnerability scanning, and penetration testing methodologies. This open-source security tool combines traditional penetration testing techniques with AI-powered analysis to detect exposed credentials, security misconfigurations, and architectural vulnerabilities.
 
-## 🚀 Features
+**Built for security professionals, penetration testers, and development teams**, KeyGuard AI Scan automates the reconnaissance, vulnerability assessment, and analysis phases of penetration testing, providing detailed security reports with actionable remediation guidance.
 
-### 🔍 Comprehensive Security Scanning
-- **Real-time Website Scanning**: Progressive scan with live updates and detailed progress tracking
-- **Deep Multi-Layer Analysis**: Scans HTML, JavaScript, CSS, inline scripts, and external resources
-- **100+ API Key Types**: Detects AWS, Google Cloud, GitHub, Stripe, OpenAI, Discord, Slack, and many more
-- **Advanced Pattern Matching**: Regex patterns with entropy analysis and confidence scoring
-- **Context-Aware Detection**: Distinguishes between real keys and test/dummy values
-- **Technology Stack Analysis**: Identifies frameworks (React, Vue, Angular), build tools (Webpack, Vite), and libraries
-- **Third-Party Service Detection**: Discovers integrated services (Google Analytics, Stripe, Sentry, Hotjar)
-- **Security Architecture Assessment**: Analyzes external resources, API endpoints, form actions, and meta tags
-- **Framework-Specific Vulnerabilities**: Tailored security checks based on detected technology stack
+### Key Penetration Testing Capabilities
+- **Automated Reconnaissance**: Technology stack fingerprinting and attack surface mapping
+- **Active Vulnerability Scanning**: Multi-layer security testing with 7+ comprehensive test categories
+- **Credential Discovery**: Pattern-based detection of exposed API keys and secrets across 20+ services
+- **Configuration Assessment**: Security header analysis, CORS validation, SSL/TLS testing
+- **Information Gathering**: Directory traversal testing, debug endpoint discovery, server fingerprinting
+- **AI-Powered Analysis**: Comprehensive security assessment with prioritized remediation recommendations
 
-### 🛡️ Active Vulnerability Testing
-- **Security Headers Analysis**: Tests for CSP, HSTS, X-Frame-Options, and other critical security headers
-- **Information Disclosure Detection**: Identifies sensitive data exposure in error pages and responses
-- **Directory Traversal Testing**: Safe read-only checks for exposed sensitive files (.env, config files, etc.)
-- **Debug Endpoint Discovery**: Detects publicly accessible development and debug endpoints
-- **CORS Configuration Validation**: Tests Cross-Origin Resource Sharing policies for misconfigurations
-- **SSL/TLS Security Assessment**: Validates HTTPS implementation and HTTP-to-HTTPS redirects
-- **Server Misconfiguration Detection**: Identifies information disclosure through server headers
-- **Security Score Calculation**: Comprehensive scoring system (0-100) based on all security findings
-- **Compliance Status Checking**: OWASP, SSL/TLS, and overall security posture assessment
+## 🚀 Penetration Testing Features
 
-### 🤖 AI-Powered Security Intelligence
-- **Smart Recommendations**: NEURA_ROUTER or any OpenAI SDK compatible integration for context-aware security audit
-- **Comprehensive Security Assessment**: Analyzes technology stack, architecture patterns, and security implementations
-- **Vulnerability Test Analysis**: AI interprets active security test results and prioritizes remediation
-- **Severity Classification**: Automatic risk assessment (Critical, High, Medium, Low) with confidence scoring
-- **Actionable Remediation**: Detailed, step-by-step fix instructions with immediate and long-term actions
-- **Modern Security Best Practices**: 2025 security guidelines including CSP, SRI, HTTPS, secure headers
-- **Framework-Specific Guidance**: Tailored recommendations for React/Next.js, Vue.js, Angular, and static sites
-- **Technology-Aware Analysis**: Custom security advice based on detected frameworks, build tools, and services
-- **Architecture Security Review**: Recommendations for API security, third-party integrations, and data flow
-- **Compliance Guidance**: OWASP, GDPR, and industry standard compliance recommendations
-- **Security Score Interpretation**: Detailed analysis of security posture with prioritized improvement roadmap
+### 🎯 Automated Penetration Testing Engine
+- **Automated Reconnaissance**: Real-time target profiling with live progress tracking and attack surface mapping
+- **Multi-Vector Analysis**: Deep scanning of HTML, JavaScript, CSS, inline scripts, and external resources
+- **Credential Harvesting Detection**: Identifies 100+ API key types across major services (AWS, Google Cloud, GitHub, Stripe, OpenAI, Discord, Slack)
+- **Advanced Pattern Recognition**: Entropy-based analysis with confidence scoring to minimize false positives
+- **Intelligence Gathering**: Technology stack fingerprinting (React, Vue, Angular), build tools (Webpack, Vite), and dependency mapping
+- **Service Enumeration**: Discovers integrated third-party services (Google Analytics, Stripe, Sentry, Hotjar, Mixpanel)
+- **Attack Surface Analysis**: Maps external resources, potential API endpoints, form actions, and security-relevant metadata
+- **Target-Specific Testing**: Framework-aware vulnerability assessment based on detected technology stack
 
-### 📊 Professional Reporting
-- **Interactive Dashboard**: Visual reporting with findings breakdown and security score display
-- **Comprehensive Security Reports**: Detailed vulnerability test results with pass/fail status
-- **Export Options**: PDF, JSON, CSV report generation with full security analysis
-- **Shareable Results**: Secure sharing of scan results with executive summaries
-- **Historical Tracking**: User account with scan history and security score trends
-- **Real-time Progress**: Live updates during scanning process with active testing phases
-- **Compliance Reporting**: OWASP, SSL/TLS, and security posture compliance status
-- **Executive Summaries**: High-level security overview for management and stakeholders
+### 🔬 Active Penetration Testing
+- **Security Header Assessment**: Comprehensive analysis of CSP, HSTS, X-Frame-Options, and critical security headers
+- **Information Disclosure Testing**: Probes error pages and server responses for sensitive data leakage
+- **Directory Traversal & Path Discovery**: Safe enumeration of exposed configuration files (.env, config.json, .git/config)
+- **Debug Interface Detection**: Identifies publicly accessible development endpoints, admin panels, and debug information
+- **CORS Security Validation**: Tests Cross-Origin Resource Sharing configurations for security bypasses
+- **SSL/TLS Implementation Testing**: Validates HTTPS enforcement, redirect policies, and certificate security
+- **Server Fingerprinting**: Detects information disclosure through server headers and technology stack exposure
+- **Penetration Testing Scoring**: Comprehensive security scoring (0-100) based on vulnerability assessment results
+- **Compliance & Standards Testing**: OWASP, SSL/TLS, and industry security standard validation
 
-### 🔐 Enterprise Security
-- **User Authentication**: JWT-based secure sessions
-- **Rate Limiting**: Protection against abuse
-- **Data Privacy**: No permanent storage of sensitive data
-- **HTTPS Encryption**: All communications encrypted
-- **Audit Logging**: Comprehensive activity tracking
+### 🤖 AI-Enhanced Penetration Testing Analysis
+- **Intelligent Threat Analysis**: NEURA_ROUTER or OpenAI-compatible integration for advanced penetration testing insights
+- **Comprehensive Penetration Testing Reports**: AI-driven analysis of attack vectors, vulnerability chaining, and exploitation scenarios
+- **Vulnerability Correlation & Prioritization**: AI interprets security test results and creates attack path prioritization
+- **Risk-Based Severity Classification**: Automated CVSS-style scoring (Critical, High, Medium, Low) with exploitation likelihood
+- **Penetration Testing Remediation**: Expert-level fix instructions with both tactical and strategic security improvements
+- **Modern Attack Vector Analysis**: 2025 security threat landscape including CSP bypasses, SRI attacks, and HTTPS downgrade risks
+- **Framework-Specific Exploitation Guidance**: Targeted security recommendations for React/Next.js, Vue.js, Angular exploitation vectors
+- **Technology-Aware Penetration Testing**: Custom attack surface analysis based on detected tech stack vulnerabilities
+- **Architecture Penetration Assessment**: Security recommendations for API endpoints, third-party integrations, and data flow attacks
+- **Compliance & Regulatory Analysis**: OWASP, GDPR, PCI-DSS, and industry compliance gap analysis
+- **Security Posture Assessment**: Detailed penetration testing report with risk-prioritized remediation roadmap
+
+### 📊 Professional Penetration Testing Reports
+- **Interactive Penetration Testing Dashboard**: Visual vulnerability analysis with risk scoring and attack vector mapping
+- **Comprehensive Penetration Testing Reports**: Detailed vulnerability assessments with exploitation scenarios and proof-of-concept
+- **Multi-Format Export**: PDF, JSON, CSV penetration testing reports with executive summaries and technical details
+- **Secure Report Sharing**: Encrypted sharing of sensitive penetration testing results with stakeholder access controls
+- **Historical Assessment Tracking**: Penetration testing timeline with security posture trends and remediation progress
+- **Real-time Testing Progress**: Live updates during active penetration testing phases with detailed methodology execution
+- **Compliance & Standards Reporting**: OWASP, PCI-DSS, NIST, and regulatory compliance assessment with gap analysis
+- **Executive Penetration Testing Summaries**: Risk-based reporting for C-level executives and security leadership
+
+### 🔐 Enterprise Penetration Testing Platform
+- **Penetration Tester Authentication**: JWT-based secure access control for security professionals
+- **Rate Limiting & Throttling**: Prevents aggressive scanning and maintains target system availability
+- **Sensitive Data Protection**: Temporary storage with automatic cleanup of penetration testing artifacts
+- **End-to-End Encryption**: All penetration testing communications secured via HTTPS/TLS
+- **Comprehensive Audit Logging**: Full penetration testing activity tracking with detailed methodology execution logs
+
+## 🎯 Penetration Testing Methodology
+
+KeyGuard AI Scan follows established penetration testing methodologies including **OWASP Testing Guide**, **NIST Cybersecurity Framework**, and **PTES (Penetration Testing Execution Standard)**.
+
+### Phase 1: Reconnaissance & Information Gathering
+- **Target Profiling**: Domain analysis, technology stack identification, and service enumeration
+- **Attack Surface Mapping**: External resource discovery, endpoint enumeration, and entry point identification
+- **Technology Fingerprinting**: Framework detection, version identification, and dependency analysis
+- **Third-Party Service Discovery**: Integrated service identification and potential attack vectors
+
+### Phase 2: Vulnerability Assessment & Scanning
+- **Automated Security Testing**: 7+ comprehensive test categories with active probing techniques
+- **Credential Discovery**: Pattern-based analysis for exposed API keys, tokens, and secrets
+- **Configuration Analysis**: Security header validation, CORS testing, and SSL/TLS assessment
+- **Information Disclosure Testing**: Error page analysis, debug endpoint discovery, and sensitive file exposure
+
+### Phase 3: Vulnerability Analysis & Exploitation Assessment
+- **Risk-Based Prioritization**: CVSS-based scoring with exploitation likelihood assessment
+- **Attack Vector Analysis**: Vulnerability chaining and potential exploitation scenarios
+- **Business Impact Assessment**: Risk evaluation based on detected technologies and exposed assets
+- **Compliance Gap Analysis**: OWASP, PCI-DSS, and regulatory compliance validation
+
+### Phase 4: Reporting & Remediation
+- **Executive Summary Reports**: High-level findings with business impact assessment
+- **Technical Penetration Testing Reports**: Detailed vulnerability analysis with proof-of-concept
+- **Remediation Roadmap**: Prioritized fix recommendations with implementation timelines
+- **Compliance Documentation**: Standards-based reporting for audit and regulatory requirements
+
+### Automated Testing Categories
+1. **Security Headers Assessment** (CSP, HSTS, X-Frame-Options)
+2. **Information Disclosure Detection** (Error pages, debug information)
+3. **Directory Traversal & Path Discovery** (Sensitive file exposure)
+4. **Debug Interface Detection** (Development endpoints, admin panels)
+5. **CORS Configuration Validation** (Cross-origin security bypasses)
+6. **SSL/TLS Implementation Testing** (HTTPS enforcement, certificate validation)
+7. **Server Misconfiguration Detection** (Information leakage, fingerprinting)
 
 ## 🏗️ Architecture
 
@@ -68,17 +114,17 @@ KeyGuard AI Scan is a comprehensive, open-source security tool that performs dee
 - **State Management**: TanStack Query for server state
 - **Icons**: Lucide React for consistent iconography
 
-### Backend Stack
-- **Language**: Rust for performance and safety
-- **Database**: LibSQL for lightweight, fast data storage
-- **Web Framework**: Axum for async HTTP services
-- **Authentication**: JWT with bcrypt password hashing
-- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible) with enhanced secutity audit
-- **HTTP Client**: Reqwest for comprehensive web content analysis
-- **Security Engine**: Advanced pattern matching with entropy analysis and technology detection
-- **Content Parser**: HTML/CSS/JavaScript analysis with framework and library detection
-- **Vulnerability Testing Engine**: Active security testing with 7+ comprehensive test categories
-- **Security Scoring System**: Automated security posture assessment with compliance checking
+### Backend Stack (Penetration Testing Engine)
+- **Language**: Rust for high-performance security scanning and memory safety
+- **Database**: LibSQL for fast penetration testing data storage and result caching
+- **Web Framework**: Axum for async HTTP penetration testing services
+- **Authentication**: JWT with bcrypt for secure penetration tester access control
+- **AI Integration**: NEURA_ROUTER (OpenAI SDK compatible) for intelligent penetration testing analysis
+- **HTTP Client**: Reqwest for comprehensive target reconnaissance and active probing
+- **Penetration Testing Engine**: Advanced pattern recognition with entropy analysis for credential discovery
+- **Content Analysis Engine**: Multi-layer parsing for vulnerability identification across web technologies
+- **Active Testing Framework**: 7+ penetration testing modules for comprehensive security assessment
+- **Risk Assessment System**: Automated penetration testing scoring with compliance validation
 
 ### Infrastructure
 - **Containerization**: Docker with multi-stage builds
@@ -169,38 +215,38 @@ RUST_LOG=info
 
 ### Core Endpoints
 
-#### Scanning
-- `POST /api/scan` - Start new scan
-- `GET /api/scan/:id` - Get scan results
-- `GET /api/scan/:id/progress` - Get scan progress
+#### Penetration Testing
+- `POST /api/scan` - Initiate comprehensive penetration test
+- `GET /api/scan/:id` - Retrieve penetration testing results and vulnerability assessments
+- `GET /api/scan/:id/progress` - Monitor active penetration testing progress and methodology execution
 
-#### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `GET /api/user/scans` - Get user's scan history
+#### Authentication & Access Control
+- `POST /api/auth/register` - Register security professional account
+- `POST /api/auth/login` - Penetration tester authentication
+- `GET /api/user/scans` - Retrieve penetration testing assessment history
 
 #### Health
 - `GET /api/health` - Service health check
 
 ### Request/Response Examples
 
-#### Start Scan
+#### Initiate Penetration Test
 ```json
 POST /api/scan
 {
-  "url": "https://example.com",
-  "user_id": "optional-user-id"
+  "url": "https://target-domain.com",
+  "user_id": "penetration-tester-id"
 }
 ```
 
-#### Scan Response
+#### Penetration Testing Response
 ```json
 {
   "success": true,
   "data": {
-    "id": "scan-uuid",
-    "url": "https://example.com",
-    "status": "scanning",
+    "id": "pentest-uuid",
+    "url": "https://target-domain.com",
+    "status": "active_testing",
     "findings": [],
     "summary": {
       "critical": 0,
@@ -214,48 +260,48 @@ POST /api/scan
       "technologies": ["Webpack", "Tailwind CSS"],
       "third_party_services": ["Google Analytics", "Stripe"],
       "potential_endpoints": ["/api/users", "/api/auth"],
-      "external_resources": ["https://cdn.example.com/script.js"],
+      "external_resources": ["https://cdn.target.com/script.js"],
       "form_actions": ["/api/contact"],
       "meta_tags": {"viewport": "width=device-width"},
       "vulnerability_tests": [
         {
-          "test_name": "CSP Header",
+          "test_name": "CSP Header Assessment",
           "status": "fail",
           "severity": "medium",
-          "description": "Content Security Policy header missing",
-          "recommendation": "Implement CSP header to prevent XSS attacks"
+          "description": "Content Security Policy header missing - XSS vulnerability identified",
+          "recommendation": "Implement strict CSP header to mitigate XSS attack vectors"
         }
       ],
       "security_score": 75,
       "compliance_status": {
-        "OWASP": "Partial",
+        "OWASP": "Partial Compliance",
         "SSL/TLS": "Good",
-        "Security Posture": "Fair"
+        "Security Posture": "Moderate Risk"
       }
     },
-    "ai_recommendations": "Comprehensive security audit with vulnerability analysis..."
+    "ai_recommendations": "Comprehensive penetration testing analysis with attack vector prioritization..."
   }
 }
 ```
 
-## 🧪 Testing
+## 🧪 Penetration Testing Validation
 
-### Frontend Testing
+### Frontend Security Testing
 ```bash
-npm run test
-npm run test:coverage
+npm run test              # UI security component testing
+npm run test:coverage     # Security test coverage analysis
 ```
 
-### Backend Testing
+### Backend Penetration Testing Engine Validation
 ```bash
 cd server
-cargo test
-cargo test --release
+cargo test                # Core penetration testing module tests
+cargo test --release      # Performance testing for security scanning engine
 ```
 
-### Integration Testing
+### End-to-End Penetration Testing Validation
 ```bash
-docker-compose -f docker-compose.test.yml up --build
+docker-compose -f docker-compose.test.yml up --build    # Full penetration testing platform validation
 ```
 
 ## 🚀 Deployment
@@ -276,30 +322,37 @@ docker-compose -f docker-compose.prod.yml up -d
 4. Set up SSL certificates
 5. Configure monitoring and logging
 
-## 🔐 Security Considerations
+## 🔐 Penetration Testing Ethics & Security
 
-### Data Privacy
-- **No Permanent Storage**: Scan results stored temporarily
-- **Encryption**: All data transmission via HTTPS
-- **User Control**: Clear data retention policies
-- **Anonymization**: No PII stored without consent
+### Responsible Penetration Testing
+- **Authorized Testing Only**: Designed for authorized security assessments and owned assets
+- **Non-Destructive Testing**: Read-only analysis without system compromise or data modification
+- **Rate Limiting**: Prevents aggressive scanning that could impact target availability
+- **Legal Compliance**: Adheres to GDPR, CCPA, and international cybersecurity regulations
+- **Responsible Disclosure**: Security-first approach with clear vulnerability reporting
 
-### Comprehensive Security Audit
-- **Multi-Layer Scanning**: Analyzes HTML, JavaScript, CSS, and external resources
-- **Active Vulnerability Testing**: 7+ categories of security tests including headers, CORS, SSL/TLS
-- **Technology Stack Assessment**: Framework and library security evaluation
-- **Third-Party Risk Analysis**: Evaluates security implications of integrated services
-- **Architecture Security Review**: API endpoints, external dependencies, and data flow analysis
-- **Modern Security Standards**: 2025 best practices including CSP, SRI, and secure headers
-- **Security Scoring**: Automated assessment with 0-100 security score and compliance status
-- **Information Disclosure Testing**: Safe detection of sensitive file exposure and debug endpoints
+### Data Privacy & Security
+- **Temporary Data Storage**: Scan results stored temporarily with automatic cleanup
+- **End-to-End Encryption**: All penetration testing data transmitted via HTTPS
+- **Access Controls**: JWT-based authentication with session management
+- **Audit Logging**: Comprehensive penetration testing activity tracking
+- **No PII Collection**: Anonymized scanning without personal data storage
 
-### Scanning Ethics
-- **Rate Limiting**: Prevents abuse of target websites
-- **Robots.txt**: Respects website scanning preferences
-- **Legal Compliance**: GDPR, CCPA compliant
-- **Responsible Disclosure**: Security-focused approach
-- **Non-Intrusive Analysis**: Read-only content analysis without active exploitation
+### Professional Penetration Testing Capabilities
+- **Multi-Vector Assessment**: Comprehensive analysis across HTML, JavaScript, CSS, and external resources
+- **Active Security Testing**: 7+ penetration testing categories including header analysis, CORS validation, SSL/TLS assessment
+- **Technology Stack Penetration Testing**: Framework-specific vulnerability assessment and exploit identification
+- **Third-Party Integration Security**: Risk analysis of integrated services and potential attack vectors
+- **API Security Assessment**: Endpoint discovery, authentication testing, and data flow analysis
+- **Modern Attack Vector Analysis**: 2025 threat landscape including CSP bypasses, SRI exploitation, and secure header circumvention
+- **Penetration Testing Scoring**: Industry-standard risk assessment with 0-100 security scoring
+- **Information Gathering**: Safe enumeration of sensitive files, debug endpoints, and configuration exposure
+
+### Penetration Testing Standards Compliance
+- **OWASP Testing Guide**: Follows OWASP web application security testing methodology
+- **PTES Compliance**: Aligned with Penetration Testing Execution Standard
+- **NIST Framework**: Incorporates NIST Cybersecurity Framework principles
+- **Industry Best Practices**: Implements professional penetration testing standards and methodologies
 
 ## 🤝 Contributing
 
@@ -474,4 +527,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**KeyGuard AI Scan** - Securing the web, one API key at a time. 🔐✨
+**KeyGuard AI Scan** - Professional automated penetration testing for modern web applications. 🎯🔐
