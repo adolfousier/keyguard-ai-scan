@@ -31,3 +31,4 @@ keyguard.db*
 *.sw?
 .env
 PRD.md
+src/plans/
