@@ -414,6 +414,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
+### v0.2.3 (2025-10-01)
+- **Markdown Table Rendering**: Fixed AI security audit reports not rendering tables properly by adding remark-gfm plugin
+- **Enhanced Report Formatting**: Security audit tables now display with proper styling in both light and dark modes
+- **Improved Readability**: GitHub Flavored Markdown tables for executive summaries, compliance status, and vulnerability breakdowns now render correctly
+
 ### v0.2.2 (2025-10-01)
 - **Enhanced Summary Calculation**: Fixed vulnerability test results not being counted in the security findings summary
 - **Comprehensive Findings Display**: Security audit now correctly shows total findings including both API key discoveries and failed vulnerability tests

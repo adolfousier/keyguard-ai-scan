@@ -20,6 +20,7 @@ import { AIRecommendations } from "./AIRecommendations";
 import { ShareButton } from "./ShareButton";
 import { ExportButton } from "./ExportButton";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ScanResultsProps {
   result: ScanResult;
@@ -213,6 +214,7 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
               <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 rounded-xl p-6 border border-purple-200 dark:border-gray-600">
                 <div className="prose prose-sm max-w-none">
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       h1: ({node, ...props}) => (
                         <h1 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-purple-200" {...props} />
@@ -261,6 +263,26 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                       ),
                       strong: ({node, ...props}) => (
                         <strong className="font-semibold text-gray-900 bg-yellow-100 px-1 rounded" {...props} />
+                      ),
+                      table: ({node, ...props}) => (
+                        <div className="overflow-x-auto my-4">
+                          <table className="min-w-full border-collapse border border-gray-300" {...props} />
+                        </div>
+                      ),
+                      thead: ({node, ...props}) => (
+                        <thead className="bg-gray-100" {...props} />
+                      ),
+                      tbody: ({node, ...props}) => (
+                        <tbody {...props} />
+                      ),
+                      tr: ({node, ...props}) => (
+                        <tr className="border-b border-gray-200" {...props} />
+                      ),
+                      th: ({node, ...props}) => (
+                        <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-900" {...props} />
+                      ),
+                      td: ({node, ...props}) => (
+                        <td className="border border-gray-300 px-4 py-2 text-gray-700" {...props} />
                       ),
                     }}
                   >

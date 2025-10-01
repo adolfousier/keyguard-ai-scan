@@ -19,6 +19,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { scannerClient } from "@/lib/scanner-client";
 import { ScanResult } from "@/types/scan";
 import { toast } from "@/hooks/use-toast";
@@ -286,6 +287,7 @@ const ScanResultsPage = () => {
               <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 rounded-xl p-6 border border-purple-200 dark:border-gray-600">
                 <div className="prose prose-sm max-w-none">
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       h1: ({node, ...props}) => (
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 pb-2 border-b border-purple-200 dark:border-gray-600" {...props} />
