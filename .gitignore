@@ -32,3 +32,4 @@ keyguard.db*
 .env
 PRD.md
 src/plans/
+commands.md

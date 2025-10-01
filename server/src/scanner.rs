@@ -291,9 +291,9 @@ async fn perform_scan(db: Database, scan_id: String, request: ScanRequest) -> Re
     );
     let ai_recommendations = ai_service.generate_recommendations(&findings, &request.url, Some(&content_summary)).await?;
     println!("✨ AI recommendations generated successfully");
-    
-    // Calculate summary
-    let summary = calculate_summary(&findings);
+
+    // Calculate summary including vulnerability tests
+    let summary = calculate_summary_with_vuln_tests(&findings, &security_analysis.vulnerability_tests);
     
     // Update final result
     let end_time = Utc::now();
@@ -604,7 +604,7 @@ fn calculate_summary(findings: &[ApiKeyFinding]) -> ScanSummary {
         low: 0,
         total: findings.len() as u32,
     };
-    
+
     for finding in findings {
         match finding.severity.as_str() {
             "critical" => summary.critical += 1,
@@ -614,7 +614,44 @@ fn calculate_summary(findings: &[ApiKeyFinding]) -> ScanSummary {
             _ => {}
         }
     }
-    
+
+    summary
+}
+
+fn calculate_summary_with_vuln_tests(findings: &[ApiKeyFinding], vuln_tests: &[VulnerabilityTest]) -> ScanSummary {
+    let mut summary = ScanSummary {
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0,
+        total: findings.len() as u32,
+    };
+
+    // Count API key findings
+    for finding in findings {
+        match finding.severity.as_str() {
+            "critical" => summary.critical += 1,
+            "high" => summary.high += 1,
+            "medium" => summary.medium += 1,
+            "low" => summary.low += 1,
+            _ => {}
+        }
+    }
+
+    // Count failed vulnerability tests
+    for test in vuln_tests {
+        if test.status == "fail" {
+            summary.total += 1;
+            match test.severity.as_str() {
+                "critical" => summary.critical += 1,
+                "high" => summary.high += 1,
+                "medium" => summary.medium += 1,
+                "low" => summary.low += 1,
+                _ => {}
+            }
+        }
+    }
+
     summary
 }
 

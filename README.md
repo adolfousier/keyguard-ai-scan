@@ -414,6 +414,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
+### v0.2.2 (2025-10-01)
+- **Enhanced Summary Calculation**: Fixed vulnerability test results not being counted in the security findings summary
+- **Comprehensive Findings Display**: Security audit now correctly shows total findings including both API key discoveries and failed vulnerability tests
+- **Improved Summary Metrics**: Total Findings, High Priority, and Lower Priority counts now include all security issues detected during scans
+- **Bug Fix**: Resolved issue where security header failures, exposed files, and SSL/TLS issues were not reflected in the dashboard summary
+- **Environment Configuration**: Fixed VITE_API_URL configuration for proper frontend-backend communication in Docker deployments
+
 ### v0.2.1 (2025-09-12)
 - **Active Vulnerability Testing Engine**: Comprehensive security testing with 7+ test categories including security headers, information disclosure, directory traversal, debug endpoints, CORS, SSL/TLS, and server misconfigurations
 - **Security Scoring System**: Automated 0-100 security score calculation based on API key findings and vulnerability test results
