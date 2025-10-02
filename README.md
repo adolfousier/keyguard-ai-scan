@@ -414,6 +414,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
+### v0.2.4 (2025-10-02)
+- **Enhanced Security Findings Display**: Fixed security findings section to properly show vulnerability test failures alongside API key discoveries
+- **Improved Type Definitions**: Added comprehensive TypeScript types for VulnerabilityTest and SecurityAnalysis interfaces
+- **Better Empty State Handling**: Security dashboard now correctly displays "No security issues found" only when both API keys and vulnerability tests pass
+- **Bug Fix**: Resolved issue where failed vulnerability tests were not triggering security findings display
+
 ### v0.2.3 (2025-10-01)
 - **Markdown Table Rendering**: Fixed AI security audit reports not rendering tables properly by adding remark-gfm plugin
 - **Enhanced Report Formatting**: Security audit tables now display with proper styling in both light and dark modes

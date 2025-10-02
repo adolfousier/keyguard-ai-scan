@@ -69,7 +69,8 @@ const ScanResultsPage = () => {
           totalChecks: scanResult.total_checks,
           completedChecks: scanResult.completed_checks,
           aiRecommendations: scanResult.ai_recommendations,
-          summary: scanResult.summary
+          summary: scanResult.summary,
+          securityAnalysis: scanResult.security_analysis
         };
 
         setResult(transformedResult);
@@ -373,7 +374,7 @@ const ScanResultsPage = () => {
             <CardTitle className="text-gray-900 dark:text-white">Security Findings</CardTitle>
           </CardHeader>
           <CardContent>
-            {result.findings.length === 0 ? (
+            {result.findings.length === 0 && (!result.securityAnalysis || result.securityAnalysis.vulnerability_tests.filter(t => t.status === 'fail').length === 0) ? (
               <div className="text-center py-8">
                 <div className="bg-green-100 dark:bg-green-900/30 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                   <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
@@ -385,6 +386,7 @@ const ScanResultsPage = () => {
               </div>
             ) : (
               <div className="space-y-6">
+                {/* API Key Findings */}
                 {result.findings.map((finding) => (
                   <div key={finding.id} className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-red-200 dark:border-red-800/50 rounded-xl p-6 shadow-sm">
                     <div className="flex items-start justify-between mb-4">
