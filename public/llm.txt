@@ -1,0 +1,55 @@
+# KeyGuard AI Scan - LLM Context
+
+## Project Overview
+KeyGuard AI Scan is a comprehensive open-source automated penetration testing platform that performs deep web application security assessments following OWASP, PTES, and NIST methodologies.
+
+## Key Penetration Testing Features
+- **7+ Active Test Categories**: Security headers, CORS, SSL/TLS, directory traversal, debug endpoints, information disclosure, server fingerprinting
+- **Security Header Assessment**: CSP, HSTS, X-Frame-Options, X-Content-Type-Options analysis
+- **Technology Stack Fingerprinting**: Framework detection, dependency mapping, attack surface analysis
+- **Credential Discovery**: Pattern-based detection of exposed API keys across 100+ services
+- **AI-Powered Exploit Analysis**: Attack vector prioritization, vulnerability chaining, remediation roadmaps
+- **OWASP Compliant Reports**: Professional pentest reports with CVSS scoring and compliance validation
+- **Rust-Powered Engine**: High-performance security scanning with memory safety
+
+## Technology Stack
+- Frontend: React 18, TypeScript, Vite, Tailwind CSS, Shadcn/ui
+- Backend: Rust (Axum framework), LibSQL database
+- AI: NEURA_ROUTER (OpenAI-compatible) for penetration testing analysis
+- Scanning Engine: Advanced pattern recognition with entropy analysis
+- Testing Framework: 7+ comprehensive penetration testing modules
+
+## Penetration Testing Methodology
+Following OWASP Testing Guide, PTES, and NIST Framework:
+1. **Reconnaissance**: Technology fingerprinting, service enumeration
+2. **Vulnerability Assessment**: Active security testing across 7+ categories
+3. **Analysis**: Risk-based prioritization with CVSS scoring
+4. **Reporting**: Executive summaries with remediation roadmaps
+
+## Use Cases
+- Automated penetration testing
+- OWASP compliance validation
+- Security header assessment
+- Vulnerability scanning
+- Attack surface analysis
+- Framework-specific security testing
+- Compliance auditing (PCI-DSS, GDPR, NIST)
+
+## Target Audience
+- Penetration testers
+- Security professionals
+- DevSecOps teams
+- Web application developers
+- Security researchers
+- Compliance officers
+
+## Links
+- GitHub: https://github.com/adolfousier/keyguard-ai-scan
+- Website: https://keyguard.meetneura.ai
+- License: MIT
+
+## Security Focus
+This tool is designed for **defensive security only**. We do not support or condone malicious use.
+
+## Last Updated
+2025-01-01

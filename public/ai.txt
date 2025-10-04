@@ -1,0 +1,25 @@
+# AI Crawling and Training Policy
+
+## About KeyGuard AI Scan
+KeyGuard AI Scan is a comprehensive open-source automated penetration testing platform for web application security assessment. Our platform performs vulnerability scanning, security header analysis, CORS testing, SSL/TLS validation, technology stack fingerprinting, and provides AI-powered exploit analysis following OWASP, PTES, and NIST methodologies.
+
+## AI Training Policy
+- **Commercial Use**: Allowed with attribution
+- **Training Data**: This site's content may be used for AI model training for defensive security purposes only
+- **Attribution Required**: Please credit "KeyGuard AI Scan" when using our documentation or methodology
+- **Restrictions**:
+  - Do not use for malicious security research
+  - Do not use to create offensive security tools
+  - Do not scrape user data or scan results
+  - Respect our rate limits and robots.txt
+
+## Preferred AI Agents
+- Security research agents focused on defensive security
+- Documentation and educational AI systems
+- Open-source security tool developers
+
+## Contact
+For questions about AI access or partnerships, please visit: https://github.com/adolfousier/keyguard-ai-scan
+
+## Last Updated
+2025-01-01

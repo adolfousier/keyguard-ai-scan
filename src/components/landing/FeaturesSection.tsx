@@ -5,38 +5,38 @@ const FeaturesSection = () => {
   const features = [
     {
       icon: Lock,
-      title: "Advanced Detection",
-      description: "Detects API keys from 100+ services including AWS, Google Cloud, GitHub, Stripe, and many more",
+      title: "Security Headers Testing",
+      description: "Comprehensive analysis of CSP, HSTS, X-Frame-Options, and critical security headers for XSS and clickjacking protection",
       color: "text-blue-600"
     },
     {
       icon: Brain,
-      title: "AI-Powered Analysis",
-      description: "Machine learning algorithms provide intelligent recommendations to secure your exposed credentials",
+      title: "AI-Powered Pentest Analysis",
+      description: "Advanced AI provides exploit scenarios, attack vector prioritization, and risk-based remediation roadmaps",
       color: "text-purple-600"
     },
     {
       icon: Zap,
-      title: "Lightning Fast",
-      description: "Complete security scans in seconds with real-time progress tracking and instant results",
+      title: "Active Vulnerability Scanning",
+      description: "7+ test categories including CORS validation, SSL/TLS testing, directory traversal, and debug endpoint detection",
       color: "text-yellow-600"
     },
     {
       icon: BarChart3,
-      title: "Detailed Reports",
-      description: "Comprehensive security reports with severity levels, recommendations, and actionable insights",
+      title: "OWASP Compliant Reports",
+      description: "Professional penetration testing reports with CVSS scoring, compliance validation, and executive summaries",
       color: "text-green-600"
     },
     {
       icon: Globe,
-      title: "Deep Web Crawling",
-      description: "Scans not just the main page but crawls through your entire website structure for hidden keys",
+      title: "Technology Stack Fingerprinting",
+      description: "Framework detection, dependency mapping, attack surface analysis, and framework-specific vulnerability assessment",
       color: "text-cyan-600"
     },
     {
       icon: Cpu,
-      title: "Open Source",
-      description: "Fully open-source with transparent algorithms - inspect, modify, and contribute to the codebase",
+      title: "Rust-Powered Engine",
+      description: "High-performance security scanning engine built in Rust for memory safety and blazing-fast vulnerability detection",
       color: "text-red-600"
     }
   ];
@@ -46,10 +46,10 @@ const FeaturesSection = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Comprehensive Security Scanning
+            Comprehensive Penetration Testing
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Protect your applications with enterprise-grade security scanning powered by AI and machine learning
+            Enterprise-grade automated pentest platform following OWASP, PTES, and NIST methodologies with AI-powered analysis
           </p>
         </div>
 

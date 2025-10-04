@@ -217,19 +217,19 @@ export const ScanResults = ({ result, onNewScan }: ScanResultsProps) => {
                     remarkPlugins={[remarkGfm]}
                     components={{
                       h1: ({node, ...props}) => (
-                        <h1 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-purple-200" {...props} />
+                        <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-purple-200" {...props} />
                       ),
                       h2: ({node, ...props}) => (
-                        <h2 className="text-lg font-semibold text-gray-800 mb-3 mt-6 flex items-center" {...props}>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3 mt-6 flex items-center" {...props}>
                           <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full mr-3"></div>
                           {props.children}
-                        </h2>
+                        </h3>
                       ),
                       h3: ({node, ...props}) => (
-                        <h3 className="text-base font-medium text-gray-700 mb-2 mt-4 flex items-center" {...props}>
+                        <h4 className="text-base font-medium text-gray-700 mb-2 mt-4 flex items-center" {...props}>
                           <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
                           {props.children}
-                        </h3>
+                        </h4>
                       ),
                       p: ({node, ...props}) => (
                         <p className="text-gray-700 mb-3 leading-relaxed" {...props} />

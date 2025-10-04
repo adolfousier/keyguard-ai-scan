@@ -414,6 +414,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📝 Changelog
 
+### v0.2.5 (2025-10-04)
+- **Major SEO Overhaul**: Completely rebranded as comprehensive automated penetration testing platform
+- **Enhanced Meta Tags**: Updated title (55 chars) and description (143 chars) to reflect full pentest capabilities
+- **Content Realignment**: Landing page now showcases 7+ test categories including security headers, CORS, SSL/TLS, and vulnerability scanning
+- **AI/LLM Discovery Files**: Added ai.txt and llm.txt for proper search engine and AI crawler indexing
+- **Improved SEO Structure**: Fixed multiple H1 tags issue, optimized heading hierarchy for better search rankings
+- **Structured Data Enhancement**: Added datePublished and dateModified fields for improved search visibility
+- **Accurate Positioning**: Repositioned API key detection as one feature among comprehensive pentest capabilities (not primary focus)
+- **Professional Messaging**: Updated all content to emphasize OWASP compliance, PTES methodology, and enterprise-grade security testing
+
 ### v0.2.4 (2025-10-02)
 - **Enhanced Security Findings Display**: Fixed security findings section to properly show vulnerability test failures alongside API key discoveries
 - **Improved Type Definitions**: Added comprehensive TypeScript types for VulnerabilityTest and SecurityAnalysis interfaces

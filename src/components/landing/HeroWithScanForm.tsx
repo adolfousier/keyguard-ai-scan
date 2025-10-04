@@ -83,31 +83,31 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
           {/* Hero Content - Left Side */}
           <div className="text-center lg:text-left">
             <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-              Detect & Fix
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> API Key Leaks and Security Issues </span>
-              Instantly
+              Automated
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Penetration Testing </span>
+              Platform
             </h1>
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-              Professional open-source security scanner that detects exposed API Keys & security issues across websites. 
-              Identifies vulnerabilities over 100+ services.
+              Comprehensive security assessment with vulnerability scanning, security header analysis, CORS testing, SSL/TLS validation,
+              and AI-powered penetration testing insights.
             </p>
             
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
               <Badge variant="secondary" className="px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
                 <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
-                100+ API Key Types
+                7+ Test Categories
               </Badge>
               <Badge variant="secondary" className="px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
                 <Brain className="h-4 w-4 mr-2 text-purple-600" />
-                AI-Powered Analysis
+                AI Pentest Analysis
               </Badge>
               <Badge variant="secondary" className="px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
                 <Zap className="h-4 w-4 mr-2 text-yellow-600" />
-                Instant Results
+                OWASP Compliant
               </Badge>
               <Badge variant="secondary" className="px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
                 <Globe className="h-4 w-4 mr-2 text-blue-600" />
-                Deep Web Scan
+                Full Stack Scan
               </Badge>
             </div>
           </div>
@@ -118,10 +118,10 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
               <CardHeader className="text-center pb-6">
                 <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
                   <Search className="h-6 w-6 mr-2 text-blue-600" />
-                  Start Security Audit Scan
+                  Start Penetration Test
                 </CardTitle>
                 <p className="text-gray-600 dark:text-gray-300 mt-2">
-                  Enter any website URL to scan for exposed API Keys & security issues and security vulnerabilities
+                  Enter any website URL for comprehensive security assessment and vulnerability analysis
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -164,7 +164,7 @@ const HeroWithScanForm = ({ isScanning, setIsScanning }: HeroWithScanFormProps) 
                   ) : (
                     <>
                       <Search className="h-5 w-5 mr-2" />
-                      Start Free Security Audit Scan
+                      Start Free Penetration Test
                     </>
                   )}
                 </Button>
